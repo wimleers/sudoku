@@ -11,15 +11,18 @@ echo "[1/6] Generating an Xcode project file ..."
 qmake Sudoku_release.pro
 
 echo "[2/6] Building the project using the Release configuration ..."
-xcodebuild -project Sudoku.xcodeproj -configuration Release clean build > /dev/null
+rm -rf Sudoku.app
+xcodebuild -project Sudoku.xcodeproj -configuration Release build clean > /dev/null
 
 echo "[3/6] Copy the necessary Qt frameworks into the application bundle ..."
-deployqt Sudoku.app # You can get deployqt from http://labs.trolltech.com/blogs/2007/08/23/deploying-mac-applications-without-the-hassle/
+macdeployqt Sudoku.app > /dev/null
 
 echo "[4/6] Packaging into a DMG ..."
+hdiutil unmount -force -notimeout -quiet /Volumes/Sudoku.dmg
+rm -f ~/Desktop/Sudoku.dmg
 mkdir dmgtmp
 mv Sudoku.app dmgtmp/
-hdiutil create -srcfolder dmgtmp -volname "Sudoku" ~/Desktop/Sudoku > /dev/null
+hdiutil create -srcfolder dmgtmp -volname "Sudoku" ~/Desktop/Sudoku.dmg > /dev/null
 mv dmgtmp/Sudoku.app ./
 rm -rf dmgtmp
 
