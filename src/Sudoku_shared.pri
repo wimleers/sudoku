@@ -76,7 +76,7 @@ macx {
   # We want a universal binaries as releases.
   CONFIG(release, debug|release) {
     message("Configured to build a universal binary")
-    CONFIG += x86 ppc
+    CONFIG += x86 x86_64
   }
 }
 
