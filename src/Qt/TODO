@@ -1,0 +1,107 @@
+#
+# First stage: basic, well functioning, nicely looking GUI
+#
+
+# General (only necessary if threads are used)
+✓ (no threads used) snappy UI: use QTimer with timeout of zero. See last code sample of http://doc.trolltech.com/4.3/qtimer.html#details. Won't be necessary, says Bram.
+
+# SudokuView, SudokuScene, SudokuElement
+✓ grok and start from example: elasticnodes
+✓ group together 9 ElementBoxes with a QGraphicsItemGroup, and group together 9 of these groups as well with a QGraphicsItemGroup (implemented differently)
+✓ ensure the proper spacing exists (i.e. 9 "boxes" of 9 elements)
+✓ check if QPainterPath can help improve performance -> not necessary: overkill, is used for *shapes*, whereas we use a lot of text
+✓ disable the generated elements (i.e. prevent any changes) and display them in another color
+✓ The process doesn't end on Windows (solved by upgrading to Qt 4.4)
+
+
+# Overall progress indicator
+✓ duration timer
+✓ validity of the Sudoku
+✓ solvability of the Sudoku
+✓ when game is finished: create QMessageBox::information and view should be disabled
+
+
+
+# Icons
+✓ Mac OS X
+✓ Windows
+✓ window icon (cross-platform)
+
+
+# Preferences
+✓ toggle stats display: numbers of elements that are: given, completed, remaining
+
+
+# In-game preferences
+✓ toggle Sudoku validity display
+✓ toggle Sudoku solvability display
+
+
+# Loading/saving/importing/exporting/printing
+✓ open saved games (SudokuGame object deserialization)
+✓ save games (SudokuGame object serialization)
+✓ import from CSV
+✓ export to CSV
+✓ export to PNG (screenshot)
+✓ print
+
+
+# Usability
+✓ keyboard control
+✓ keyboard control: use backspace to unset a final choice
+✓ keyboard control: use arrows for navigation, default focus on the middle item of the puzzle
+✓ Mac OS X integration (use sheets where possible, dock, icon)
+✓ Windows integration (icon)
+✓ Do not generate a board when the game starts, but just display an empty board and present the user with a NewGameDialog, in which he can choose the level.
+✓ Hints on a per-element basis (hotkey and context menu)
+✓ ability to pause the game (shortcut: P, also possible through the Game menu)
+✓ ability to reset the game (shortcut: R, also possible through the Game menu)
+✓ merge the Game menu into the Sudoku menu
+
+
+
+
+#
+# Second stage: fancy GUI
+#
+
+# Allow resize event, and scale everything along.
+✓ Example: http://websvn.kde.org/trunk/KDE/kdegames/kreversi/kreversiview.cpp?view=markup
+✓ Resizing with keeping the aspect ratio in mind.
+
+# Tweaks
+✓ transparent, dark-grey overlay over the rest of the board for the PauseOverlay
+
+# HUD
+✓ Über fancy HUD!
+
+# Use OpenGL for rendering
+✓ Use QGLWidget: http://doc.trolltech.com/4.3/qabstractscrollarea.html#setViewport
+✓ OpenGL w/ antialiasing: QGLFormat::sampleBuffers()
+
+# Advanced usability
+✓ Remember last chosen generation level and the validity/solvability/stats info settings. Use QSettings.
+✓ Display a 'Calculating...' progress thing in the HUD while generating a board, or validating/solving a board, instead of just 'hanging' the app.
+✓ Context-sensitive menu items (i.e. only allow game-related actions when a game is active)
+
+# Animations
+- Example: concentric circles
+✓ animations: pave the way by adding support for it throughout the code base
+- animations: QTOpenGL, example: http://daniel.molkentin.de/blog/archives/95-Leveraging-Qt-For-Smooth-Transition-Effects.html
+- animation easing: QTimeLine::setCurveShape()
+- animate through QGraphicsView::matrix()
+
+- ROTATE THE FUCKING THING WHEN THE GAME ENDS!! THIS IS THE MOST KICKASS FEATURE EVER!
+
+
+# Final things.
+✓ Inlezen van csv die niet geldig is geeft kanjer van een error (tested on windows)
+- ergens laten zien dat H voor hints is, evenzeer toetsenbordnavigatie enzo (dus laatd at ergens rechts zien, ik zorg wel voor strings)
+✓ Paused + new game = paused (all platforms)
+✓ new game = soms VANZELF paused (onder linux)
+✓ Paused in windows => BLIJFT paused (geraakt er niet uit) (tested on windows)
+✓ Game saven -> settings uitzetten -> game inladen => settings staan uit in menu, maar wel rechts geactiveerd (niet zo erg, welke homo buiten kristof gaat dat doen? :p) (tested on linux)
+✓ Teller geeft 2 seconden lang een GIGANTISCH getal voor hij vanaf 0 begint (tested on linux)
+✓ completed = 0 en remaining = 50-53 ofzo wanneer computer heeft gesolved (imo een bug)
+✓ door bord opgeloste zetten kunnen ge-unset worden door de gebruiker (waardoor ge dus een bord in 3s kunt oplossen)
+✓ fix translation in QGraphicsItems

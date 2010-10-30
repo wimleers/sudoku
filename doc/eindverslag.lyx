@@ -1,0 +1,4956 @@
+#LyX 1.6.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\options titlepage
+\use_default_options false
+\language dutch
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 4
+\tocdepth 4
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+
+\size giant
+Sudoku
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+Projectgroep 8
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Bram Bonné (0623825)
+\begin_inset Newline newline
+\end_inset
+
+Wim Leers (0623800)
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Universiteit Hasselt
+\begin_inset Newline newline
+\end_inset
+
+Academiejaar 2007-2008
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Beschrijving
+\end_layout
+
+\begin_layout Standard
+Het doel dat we wilden bereiken bij het maken van dit programma was om een
+ applicatie te voorzien die zowel sudoku's kan genereren als ingelezen sudoku's
+ kan oplossen, en dit volgens de regels van sudoku die vermeld worden op
+ Wikipedia 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-14"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Enkele van de vereisten die we vooropgesteld hadden zijn een zo intuïtief
+ mogelijke interface, platformonafhankelijkheid en hints.
+ We hebben dit alles en meer kunnen verwezelijken, met volgende feature-lijst
+ als resultaat:
+\end_layout
+
+\begin_layout Itemize
+Vijf verschillende (intuïtief juist aanvoelende) moeilijkheidsgraden.
+\end_layout
+
+\begin_layout Itemize
+Zeer efficiënte oplossings- en generatiealgoritmen.
+\end_layout
+
+\begin_layout Itemize
+Threading, zodat de UI ook responsief blijft gedurende de korte tijd dat
+ er een bord gegenereerd wordt.
+\end_layout
+
+\begin_layout Itemize
+Tijdelijke keuzes, zodat de gebruiker zelf kan ingeven welke zetten nog
+ mogelijk zijn.
+\end_layout
+
+\begin_layout Itemize
+Hints, waardoor voorgaande tijdelijke keuzes automatisch worden aangeduid.
+\end_layout
+
+\begin_layout Itemize
+Een timer.
+\end_layout
+
+\begin_layout Itemize
+Opslaan en inlezen van sudoku borden in het 
+\family typewriter
+csv
+\family default
+ formaat.
+\end_layout
+
+\begin_layout Itemize
+Opslaan en inlezen van een volledig sudoku spel (met de huidige spelstatus,
+ alle gemaakte zetten en de HUD-instellingen).
+\end_layout
+
+\begin_layout Itemize
+Volledig vertaalbaar programma (er wordt gekeken naar de systeemtaal om
+ automatisch de juiste taal te kiezen).
+\end_layout
+
+\begin_layout Itemize
+Oplossen van ingelezen spelborden (alsook gegenereerde borden) met behulp
+ van twee algoritmen.
+\end_layout
+
+\begin_layout Itemize
+Visuele feedback voor geldigheid en oplosbaarheid van het bord (dit kan
+ uiteraard ook uitgeschakeld worden).
+\end_layout
+
+\begin_layout Itemize
+Mogelijkheid tot afdrukken van de sudoku.
+\end_layout
+
+\begin_layout Itemize
+Navigatie door middel van het toetsenbord is doorheen de gehele applicatie
+ mogelijk (uiteraard kan dit ook door gebruik te maken van de muis).
+\end_layout
+
+\begin_layout Itemize
+Exporteren van een sudoku naar een afbeeldingsbestand.
+\end_layout
+
+\begin_layout Itemize
+Platformonafhankelijkheid: werkt op Windows, Mac OS X en Linux (en er zijn
+ geautomatiseerde build scripts voor al deze platformen).
+ Zie ook figuur 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:Cross-platform-Sudoku:-Mac"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Doxygen documentatie in alle klassen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Crossplatform.png
+	scale 17
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Cross-platform Sudoku: Mac OS X, Linux (Ubuntu) en Windows
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Cross-platform-Sudoku:-Mac"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Handleiding
+\end_layout
+
+\begin_layout Subsection
+Builden
+\end_layout
+
+\begin_layout Subsubsection
+Linux
+\end_layout
+
+\begin_layout Standard
+Er wordt een build script meegeleverd voor Linux: 
+\family typewriter
+build_linux.sh
+\family default
+.
+ Indien u dit script uitvoert, wordt Sudoku in release mode gebuild en wordt
+ er een .tar.gz archief van gemaakt.
+ De enige vereiste is dat de Qt development libraries geïnstalleerd zijn.
+\end_layout
+
+\begin_layout Subsubsection
+Mac OS X
+\end_layout
+
+\begin_layout Standard
+Ook voor Mac OS X wordt er een build script meegeleverd: 
+\family typewriter
+build_mac.sh
+\family default
+.
+ Wanneer u dit script uitvoert, wordt Sudoku in release mode gebuild als
+ een 
+\emph on
+Universal Binary
+\emph default
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://developer.apple.com/macosx/adoptinguniversalbinaries.html
+\end_layout
+
+\end_inset
+
+ (d.w.z.
+ voor zowel de x86 als de PPC CPU architecturen), worden de Qt frameworks
+ (als dylibs, dynamic libraries) in de .app package gekopieerd en wordt er
+ tenslotte een 
+\family typewriter
+.dmg
+\family default
+ disk image aangemaakt (het meest gebruikte formaat voor applicatie distributie
+ op Mac OS X).
+\end_layout
+
+\begin_layout Subsubsection
+Microsoft Windows
+\end_layout
+
+\begin_layout Standard
+Tenslotte is er ook voor Windows een build script voorzien: 
+\family typewriter
+build_windows.bat
+\family default
+.
+ Dit script (in feite een 
+\emph on
+batch file
+\emph default
+) compileert Sudoku in release mode (er wordt gebruik gemaakt van de command-lin
+e variant van Visual Studio) en daarna worden alle benodigde .dll's gekopieerd
+ naar dezelfde map.
+ Er wordt niet automatisch een archief of installer aangemaakt omdat deze
+ niet standaard beschikbaar zijn op Windows.
+ Het probleem met deze versie is dat het Qt proces na afsuiten van het programma
+ blijft runnen (dit is een bug in Qt 4.3.2).
+ Aangezien we voor Qt 4.4 , hebben we dus ook een script geschreven voor
+ de MingW compiler (
+\family typewriter
+build_windows_mingw.bat
+\family default
+), waarin dit probleem is opgelost.
+\end_layout
+
+\begin_layout Subsection
+Installatie
+\end_layout
+
+\begin_layout Subsubsection
+Linux
+\end_layout
+
+\begin_layout Standard
+In Linux is het ongebruikelijk dynamische libraries te bundelen met het
+ programma (in tegenstelling tot Mac OS X en Windows dus), maar wordt er
+ veelvuldig gebruik gemaakt van package managers.
+ De package manager moet gebruikt worden om de Qt libraries te installeren.
+ Op Ubuntu wordt de 
+\emph on
+APT 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://en.wikipedia.org/wiki/Advanced_Packaging_Tool
+\end_layout
+
+\end_inset
+
+
+\emph default
+ package-manager gebruikt, daar moet u dit commando uitvoeren: 
+\family typewriter
+sudo apt-get install libqt4-core
+\family default
+.
+ Dit is enkel nodig indien Qt nog niet geïnstalleerd is.
+ Op alle Linux-distributies die KDE 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://www.kde.org/
+\end_layout
+
+\end_inset
+
+ gebruiken als desktop, zal Sudoku out-of-the-box werken.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Mac OS X
+\end_layout
+
+\begin_layout Standard
+De installatie op Mac OS X werkt net zoals eender welke andere Mac applicatie:
+ het programma verslepen naar de 
+\family typewriter
+/Applications
+\family default
+ directory en je bent klaar.
+\end_layout
+
+\begin_layout Subsubsection
+Microsoft Windows
+\end_layout
+
+\begin_layout Standard
+Dankzij het build script worden alle 
+\family typewriter
+.dll
+\family default
+'s al meegeleverd.
+ Je kan 
+\family typewriter
+Sudoku.exe
+\family default
+ dus om het even waar plaatsen, zolang je de 
+\family typewriter
+.dll
+\family default
+'s maar meekopieert.
+\end_layout
+
+\begin_layout Subsection
+Spelen van een spel
+\end_layout
+
+\begin_layout Subsubsection
+Spelregels
+\end_layout
+
+\begin_layout Quote
+Een sudoku is een puzzel van negen bij negen vakjes met een klein aantal
+ reeds ingevulde enkelvoudige cijfers.
+ De kunst is de overige vakjes ook in te vullen op zo'n manier dat in elke
+ horizontale lijn én in elke verticale kolom de cijfers 1 tot en met 9 één
+ keer voorkomen.
+ Bovendien is de puzzel onderverdeeld in negen blokjes van drie bij drie,
+ die elk ook weer eenmaal de cijfers 1 tot en met 9 moeten bevatten.
+\end_layout
+
+\begin_layout Quote
+\align right
+http://nl.wikipedia.org/wiki/Sudoku
+\end_layout
+
+\begin_layout Standard
+Dit kan gedaan worden door voor een vakje alle getallen de schrappen die
+ reeds voorkomen in zijn rij, kolom of blokje.
+ We selecteren dan een getal definitief wanneer het het enige overblijvende
+ getal in zijn vakje is.
+ Het spel is afgelopen wanneer het bord volledig gevuld is.
+\end_layout
+
+\begin_layout Subsubsection
+Interface
+\end_layout
+
+\begin_layout Standard
+De Sudoku kan opgelost worden door het gebruik van de muis of het toetsenbord.
+\end_layout
+
+\begin_layout Standard
+Bij het gebruik van de muis wordt standaard een getal als tijdelijke keuze
+ aangeduid wanneer er op geklikt wordt binnen zijn vakje.
+ Om een tijdelijke keuze ongedaan te maken moet gewoon dit getal opnieuw
+ aangeklikt worden.
+ Als er gedubbelklikt wordt op dit getal wordt het geregistreerd als definitieve
+ keuze, die weer kan ongedaan gemaakt worden door opnieuw te dubbelklikken.
+\end_layout
+
+\begin_layout Standard
+Bij gebruik van het toetsenbord kan er genavigeerd worden met de pijltjestoetsen.
+ Tijdelijke keuzes kunnen aangeduid worden of ongedaan gemaakt worden door
+ de 
+\family typewriter
+Ctrl
+\family default
+ toets (
+\family typewriter
+Alt
+\family default
+ onder Mac OS X) in combinatie met het getal in te drukken.
+ Voor permanente keuzes is dit gewoon het getal zelf.
+\end_layout
+
+\begin_layout Standard
+Buiten het navigeren zijn er ook nog enkele andere toetsenbord sneltoetsen,
+ waarvan de meest belangrijke
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+De rest kan gevonden worden in het menu zelf, naast de desbetreffende keuze.
+\end_layout
+
+\end_inset
+
+ worden opgesomd in tabel 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "tab:shortcuts"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="10" columns="3">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Linux/Windows
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Mac OS X
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Actie
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Ctrl
+\family default
+ + <getal>
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Alt
+\family default
+ + <getal>
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Duid <getal> aan als één van de tijdelijke keuzes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+<getal>
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+<getal>
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Duid <getal> aan als definitieve keuze
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Backspace
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Backspace
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Haal een definitieve keuze van het bord
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+H
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+H
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Geef alle mogelijke keuzes (hints) voor het huidige vakje
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+P
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+P
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Pauzeer het spel
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Alt
+\family default
+ + S
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Alt
+\family default
+ + S
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Laat de oplosbaarheid van het bord zien (of verberg hem terug)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Alt
+\family default
+ + v
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Alt
+\family default
+ + v
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Laat de geldigheid van het bord zien (of verberg hem terug)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Ctrl
+\family default
+ + F
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Cmd
+\family default
+ + F
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wisselen tussen volledig scherm/venster
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Ctrl
+\family default
+ + Q
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+Cmd
+\family default
+ + Q
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Afsluiten
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Lijst van sneltoetsen
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:shortcuts"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Behalve het spelen van het spel zelf kan er ook nog geëxporteerd worden
+ naar een aantal formaten.
+ Het verschil tussen het opslaan en het exporteren van een bord is dat bij
+ het opslaan de volledige spelinfo wordt weggeschreven (zoals de speeltijd),
+ terwijl er bij het exporteren via een WYSIWYG strategie enkel het spelbord
+ wordt weggeschreven (of naar de printer gestuurd).
+\end_layout
+
+\begin_layout Section
+Programmastructuur
+\end_layout
+
+\begin_layout Standard
+In deze sectie bespreken we kort de gebruikte datastructuren en algoritmen.
+ Het is echter handig om ook de Doxygen documentatie
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Meegeleverd in de map 
+\emph on
+doc
+\emph default
+.
+\end_layout
+
+\end_inset
+
+ bij de hand te houden, aangezien al onze klassen Doxygen documentatie bevatten.
+\end_layout
+
+\begin_layout Subsection
+UML
+\end_layout
+
+\begin_layout Standard
+De UML diagrammen kunnen gevonden geworden op pagina's 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "fig:UML-deel-1"
+
+\end_inset
+
+ - 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "fig:UML-deel-4"
+
+\end_inset
+
+.
+ Ook figuur 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:GUI-Architectuur"
+
+\end_inset
+
+ geeft nog een mooi overzicht van hoe de Qt klassen met elkaar verbonden
+ zijn.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/UML_1.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+UML deel 1
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:UML-deel-1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/UML_2.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+UML deel 2
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:UML-deel-2"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/UML_3.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+UML deel 3
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:UML-deel-3"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/UML_4.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+UML deel 4
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:UML-deel-4"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+ADT's
+\end_layout
+
+\begin_layout Standard
+In deze sectie zullen we de klassenstructuur van ons programma uitleggen,
+ waarbij we enkele belangrijke functies vermelden.
+ Indien verdere uitleg van deze functies gewenst is, verwijzen we u graag
+ door naar de Doxygen documentatie, waarin voor elke functie een korte beschrijv
+ing voorzien is.
+\end_layout
+
+\begin_layout Subsubsection
+De Board klasse
+\end_layout
+
+\begin_layout Standard
+De 
+\family typewriter
+Board
+\family default
+ klasse houdt in eerste instantie een sudoku puzzel bij, waarbij geen onderschei
+d gemaakt wordt tussen elementen die vooraf gegenereerd werden en elementen
+ die door de gebruiker ingevuld werden.
+ Buiten een representatie van het bord biedt deze klasse ook nog een aantal
+ interessante functies zoals 
+\family typewriter
+IsValid()
+\family default
+, een method die kijkt of we op een geldig bord werken, en 
+\family typewriter
+IsValidMove()
+\family default
+, die ons vertelt of een zet geldig is ervan uit gaande dat het bord dat
+ reeds is.
+\end_layout
+
+\begin_layout Standard
+Verder bevat deze klasse ook nog alle mogelijke manieren om het bord weg
+ te schrijven en in te lezen (zie ook sectie 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Bestandsstructuren"
+
+\end_inset
+
+) en enkele functies om het bord gemakkelijker aan te spreken en te kopiëren.
+\end_layout
+
+\begin_layout Subsubsection
+De Sudoku klasse
+\end_layout
+
+\begin_layout Standard
+Deze klasse wordt nooit geïnstantieerd (bevat enkel statische functies)
+ maar wordt enkel gebruikt voor de berekeningen, waarbij het telkens een
+ pointer of referentie naar of een kopie van het bord meekrijgt.
+ De klasse bevat enkel algoritmes, die verder behandeld worden in sectie
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Algoritmes"
+
+\end_inset
+
+.
+ We vermelden hier dan ook enkel dat 
+\family typewriter
+SolveBoard()
+\family default
+ en 
+\family typewriter
+BoardIsSolvable()
+\family default
+ verder de memberfuncties 
+\family typewriter
+ScanSolve()
+\family default
+ en 
+\family typewriter
+BacktrackSolve()
+\family default
+ aanroepen.
+\end_layout
+
+\begin_layout Subsubsection
+De PositionElement klasse
+\end_layout
+
+\begin_layout Standard
+De 
+\family typewriter
+PositionElement
+\family default
+ klasse wordt vooral gebruikt door de algoritmes die zich in de 
+\family typewriter
+Sudoku
+\family default
+ klasse bevinden.
+ Hij houdt simpelweg de waarde van een element bij, samen met zijn positie
+ op het bord.
+\end_layout
+
+\begin_layout Subsubsection
+De BoardGenerator klasse
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:BoardGenerator"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit is in feite een wrapper-klasse voor 
+\family typewriter
+Sudoku::GenerateBoard()
+\family default
+, om ervoor te zorgen dat deze functie uitgevoerd wordt in een apart (
+\emph on
+worker
+\emph default
+) thread.
+ Zodra een bord gegenereerd is, stopt het thread vanzelf met bestaan.
+ Er wordt ook bijgehouden hoelang er precies gedaan wordt over het genereren
+ van een bord.
+ Als je het programma via de terminal start kan je deze tijden dan ook zien
+ (zie listing 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "lst:BoardGenerator"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},float"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Start generating new board...
+\end_layout
+
+\begin_layout Plain Layout
+
+Finished generating new board in worker thread in 18 ms.
+\end_layout
+
+\begin_layout Plain Layout
+
+Game is ready!
+\end_layout
+
+\begin_layout Plain Layout
+
+Start generating new board...
+\end_layout
+
+\begin_layout Plain Layout
+
+Finished generating new board in worker thread in 12 ms.
+\end_layout
+
+\begin_layout Plain Layout
+
+Game is ready!
+\end_layout
+
+\begin_layout Plain Layout
+
+Start generating new board...
+\end_layout
+
+\begin_layout Plain Layout
+
+Finished generating new board in worker thread in 63 ms.
+\end_layout
+
+\begin_layout Plain Layout
+
+Game is ready!
+\end_layout
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+De tijd nodig om een nieuw bord te genereren is zichtbaar in de terminal.
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "lst:BoardGenerator"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+De FileIO klasse
+\end_layout
+
+\begin_layout Standard
+Deze klasse herbruiken we uit ons vorige project 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-19"
+
+\end_inset
+
+.
+ Hij zorgt voor het wegschrijven en inlezen van het spelbord in het 
+\family typewriter
+csv
+\family default
+ bestandsformaat.
+ Deze klasse wordt gebruikt door de 
+\family typewriter
+Import()
+\family default
+ en 
+\family typewriter
+Export()
+\family default
+ methods van de 
+\family typewriter
+Board
+\family default
+ klasse.
+\end_layout
+
+\begin_layout Standard
+Voor meer informatie over de bestandsformaten verwijzen we door naar sectie
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Bestandsstructuren"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+De Exception klassen
+\end_layout
+
+\begin_layout Standard
+Deze drie klassen (
+\family typewriter
+Exception
+\family default
+, met daarvan afgeleid 
+\family typewriter
+FileIOException
+\family default
+ en 
+\family typewriter
+InternalException
+\family default
+) worden gebruikt om excepties af te handelen.
+\end_layout
+
+\begin_layout Subsubsection
+GUI architectuur
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:GUI-Architectuur"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Om meteen een duidelijk idee te geven van de klasse-opbouw van de GUI, is
+ het handig om met een diagram te beginnen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/GUI_class_architecture.png
+	scale 70
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+GUI architectuur diagram
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:GUI-architectuur-diagram"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De 
+\family typewriter
+SudokuApp
+\family default
+ klasse is een afgeleide van 
+\family typewriter
+QApplication
+\family default
+ en is dus het startpunt van de hele applicatie.
+ Het bevat één 
+\family typewriter
+MainWindow
+\family default
+ klasse die onder andere het hoofdvenster en de menu's onderhoudt.
+ Wanneer de gebruiker een nieuw spel start wordt er een 
+\family typewriter
+NewGameDialog
+\family default
+ object aangemaakt.
+ Dit is een modal dialog.
+ Bijgevolg wordt de gebruiker verplicht om eerst dit venster te behandelen
+ voordat hij verdergaat met andere acties in het programma.
+ Daarom is het ook logisch dat dit object enkel gedurende zijn gebruiksduur
+ bestaat: als de gebruiker klaar is met dit dialoogvenster, wordt het object
+ weer vernietigd.
+\end_layout
+
+\begin_layout Standard
+Dan komen we nu bij het interessante gedeelte.
+ De 
+\family typewriter
+MainWindow
+\family default
+ klasse bevat één 
+\family typewriter
+SudokuView
+\family default
+, één 
+\family typewriter
+SudokuScene
+\family default
+ en één 
+\family typewriter
+SudokuGame
+\family default
+ object en is de eigenaar van al deze objecten.
+ Maar een 
+\family typewriter
+SudokuView
+\family default
+ object heeft uiteraard een 
+\family typewriter
+SudokuScene
+\family default
+ object nodig om iets zinnig te kunnen weergeven, dus wordt een pointer
+ naar het 
+\family typewriter
+SudokuScene
+\family default
+ object meegegeven.
+ Op zijn beurt kan het 
+\family typewriter
+SudokuScene
+\family default
+ object slechts een Sudoku spel weergeven indien er een 
+\family typewriter
+SudokuGame
+\family default
+ object is waaruit het de nodige informatie kan halen.
+ Wanneer een nieuw spel gestart wordt, blijven de 
+\family typewriter
+SudokuView
+\family default
+ en 
+\family typewriter
+SudokuScene
+\family default
+ objecten onaangetast: er wordt simpelweg een nieuwe pointer naar een 
+\family typewriter
+SudokuGame
+\family default
+ object ingesteld in het 
+\family typewriter
+SudokuScene
+\family default
+ object.
+\end_layout
+
+\begin_layout Standard
+De 
+\family typewriter
+SudokuScene
+\family default
+ bevat 81 (één voor ieder vakje) 
+\family typewriter
+SudokuElement
+\family default
+ objecten, één 
+\family typewriter
+SudokuHUD
+\family default
+ object (waarin de timer, de geldigheid, oplosbaarheid en statistieken van
+ de huidige puzzel getoond worden).
+ Ook bevat het een 
+\family typewriter
+PauseOverlay
+\family default
+ object en een 
+\family typewriter
+PauseOverlayEventFilter
+\family default
+ object.
+ Daarover meer in secties 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:PauseOverlay"
+
+\end_inset
+
+ en 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:PauseOverlayEventFilter"
+
+\end_inset
+
+; voorlopig is het genoeg om te weten dat deze beide objecten gedurende
+ de hele levenstijd van het 
+\family typewriter
+SudokuScene
+\family default
+ object ook bestaan, maar slechts gebruikt worden wanneer nodig.
+\end_layout
+
+\begin_layout Standard
+Ten slotte dan nog de 
+\family typewriter
+SudokuGame
+\family default
+ klasse: deze bevat alle spellogica (minus de algoritmes, want die zitten
+ in de 
+\family typewriter
+Sudoku
+\family default
+ klasse als static methods).
+ 
+\end_layout
+
+\begin_layout Subsubsection
+SudokuApp
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:SudokuApp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+SudokuApp
+\family default
+ is een afgeleide van de 
+\family typewriter
+QApplication
+\family default
+ klasse.
+ Deze klasse afleiden is in de meeste applicaties overbodig, maar in ons
+ geval was het noodzakelijk: we wilden de applicatie automatisch pauzeren
+ indien de focus van de gebruiker naar een andere applicatie wisselt.
+ Om dit te bereiken, overriden we het 
+\family typewriter
+event()
+\family default
+ slot, zodat de gewenste reactie op het 
+\family typewriter
+QEvent::ApplicationDeactivate
+\family default
+ event kan worden voorzien.
+\end_layout
+
+\begin_layout Standard
+Jammer genoeg bleek achteraf dat dit event niet ondersteund wordt op Linux,
+ of althans niet door het X Window System
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://en.wikipedia.org/wiki/X_Window_System
+\end_layout
+
+\end_inset
+
+ (dat alomtegenwoordig is in Linux distributies), in tegenstelling tot wat
+ de documentatie beweert 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-20"
+
+\end_inset
+
+.
+ We gebruiken het dus enkel onder Mac OS X en Windows.
+\end_layout
+
+\begin_layout Subsubsection
+Dimensions
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Dimensions"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Deze klasse bevat uitsluitend static public members.
+ Er zijn geen variabelen, enkel constanten.
+ Deze constanten bepalen de 
+\emph on
+verhoudingen
+\emph default
+ van de GUI.
+ Zo is het dus mogelijk om de GUI er compleet anders te laten uitzien zonder
+ enige verandering in een ander bestand (voor een voorbeeld, zie figuur
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Dimensions_example"
+
+\end_inset
+
+).
+ 
+\emph on
+Iedere
+\emph default
+ klasse die iets voorziet dat zichtbaar is voor de gebruiker, maakt gebruik
+ van deze constanten!
+\end_layout
+
+\begin_layout Standard
+Er zijn ook 2 statische methods: eentje om de aspect ratio op te vragen
+ (dit kan niet in een constante omdat een
+\family typewriter
+ static const double
+\family default
+ initializer niet toegelaten wordt door de 
+\family typewriter
+g++
+\family default
+ compiler), en eentje om een tekst lengte ratio te verkrijgen.
+ Deze laatste method wordt gebruikt om de grootte van tekst automatisch
+ te schalen naargelang de lengte van de vertaling.
+ Dit wordt bijvoorbeeld gebruikt in de 
+\family typewriter
+PauseOverlay
+\family default
+ klasse: 
+\begin_inset Quotes eld
+\end_inset
+
+Paused
+\begin_inset Quotes erd
+\end_inset
+
+ wordt 
+\begin_inset Quotes eld
+\end_inset
+
+Gepauzeerd
+\begin_inset Quotes erd
+\end_inset
+
+ in het Nederlands en zonder herschaling zou dit niet passen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Dimensions_example.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Dimensions::elementSize 80 i.p.v.
+ 50 pixels.
+ Alle andere verhoudingen zijn onaangetast; het geheel rendert nog steeds
+ mooi.
+ Zie figuur 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:GUI-evolution-5-6"
+
+\end_inset
+
+ ter vergelijking.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Dimensions_example"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+MainWindow
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:MainWindow"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Deze klasse dirigeert de werking van de GUI: ze bevat het hoofdvenster (zoals
+ de naam al aangeeft), start een 
+\family typewriter
+NewGameDialog
+\family default
+ wanneer nodig, bevat 
+\family typewriter
+SudokuView
+\family default
+, 
+\family typewriter
+SudokuScene
+\family default
+ en 
+\family typewriter
+SudokuGame
+\family default
+ objecten en leidt alle signalen in goede banen naar de juiste ontvangers.
+\end_layout
+
+\begin_layout Standard
+Het 
+\family typewriter
+SudokuView 
+\family default
+object wordt als het central widget ingesteld, waardoor er geen gebruik
+ moet gemaakt worden van 
+\family typewriter
+QLayout
+\family default
+ of afgeleides daarvan.
+ Zo bekomen we ook een zeer speelse GUI, het is tenslotte geen kantoorsoftware.
+\end_layout
+
+\begin_layout Subsubsection
+NewGameDialog
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:NewGameDialog"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit is een van de eenvoudigste klassen in het hele project.
+ Deze klasse is afgeleid van 
+\family typewriter
+QDialog
+\family default
+ en voorziet een 
+\family typewriter
+newGame(int difficulty)
+\family default
+ signal, waarmee de 
+\family typewriter
+MainWindow
+\family default
+ klasse de gewenste moeilijkheidsgraad ontvangt.
+ Het is een modal dialog, waardoor de gebruiker de rest van de applicatie
+ niet meer kan gebruiken totdat hij deze dialoog afgehandeld heeft.
+ De 
+\family typewriter
+Qt::Sheet
+\family default
+ window flag 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-4"
+
+\end_inset
+
+ is ingesteld om de applicatie meer als een standaard Mac applicatie te
+ laten aanvoelen.
+ Dankzij deze flag schuift de dialog uit het hoofdvenster.
+\end_layout
+
+\begin_layout Subsubsection
+Model-View architectuur
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Model-View-architectuur"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Het eigenlijke spel wordt beheerd door de 
+\family typewriter
+SudokuView
+\family default
+, 
+\family typewriter
+SudokuScene
+\family default
+ en 
+\family typewriter
+SudokuGame
+\family default
+ klassen (en de klassen waar deze 3 op steunen uiteraard).
+ Samen vormen ze een implementatie die dicht bij het 
+\emph on
+Model-View-Controller 
+\emph default
+design pattern
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://en.wikipedia.org/wiki/Model-view#Pattern_description
+\end_layout
+
+\end_inset
+
+ aanleunt.
+ Het is geen strikte implementatie daarvan, want in Qt definieer je typisch
+ widgets (
+\emph on
+view
+\emph default
+) én maak je tegelijk de verbindingen die reacties op de input van de gebruiker
+ realiseren (
+\emph on
+controller
+\emph default
+).
+ Het is dus vrij logisch dat je een mix krijgt van view en controller.
+ Men spreekt dan van het 
+\emph on
+Model-View 
+\emph default
+design pattern
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://doc.trolltech.com/4.3/model-view-introduction.html#the-model-view-architectur
+e
+\end_layout
+
+\end_inset
+
+.
+ Qt heeft echter wel een extra abstractie om meerdere
+\emph on
+ 
+\emph default
+instanties van views
+\emph on
+ 
+\emph default
+(meerdere views die dezelfde scene observeren
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://doc.trolltech.com/4.3/graphicsview.html#the-graphics-view-architecture
+\end_layout
+
+\end_inset
+
+) mogelijk te maken, maar daar maken wij geen gebruik van.
+ Een voorbeeld hiervan zou een voor- en zijaanzicht van dezelfde scene kunnen
+ zijn.
+\end_layout
+
+\begin_layout Standard
+In ons geval is 
+\family typewriter
+SudokuGame
+\family default
+ het 
+\emph on
+model
+\emph default
+ (bevat de business logic) en 
+\family typewriter
+SudokuScene
+\family default
+ de 
+\emph on
+view
+\emph default
+.
+\end_layout
+
+\begin_layout Subsubsection
+SudokuView
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:SudokuView"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dit is een eenvoudige afgeleide van de 
+\family typewriter
+QGraphicsView
+\family default
+ klasse, maar accepteert enkel een 
+\family typewriter
+SudokuScene
+\family default
+ object in tegenstelling tot het standaard gedrag, dat eender welk 
+\family typewriter
+QGraphicsScene
+\family default
+ object aanvaardt.
+ Wat we wel even willen opmerken is dat alle render hints en alle optimalisatie
+ flags zijn ingeschakeld.
+ Dat laatste impliceert dat alle code die op het scherm tekent zeer juist
+ geïmplementeerd is, anders zouden er artifacts optreden.
+ Een korte uitleg bij iedere flag:
+\end_layout
+
+\begin_layout Enumerate
+
+\family typewriter
+QGraphicsView::DontClipPainter
+\family default
+: schakelt alle impliciete (automatische) clipping uit.
+ Dit vereist dat je code ten alle tijde binnen de 
+\emph on
+bounding rectangles
+\emph default
+ tekent.
+\end_layout
+
+\begin_layout Enumerate
+
+\family typewriter
+QGraphicsView::DontSavePainterState
+\family default
+: 
+\family typewriter
+QGraphicsView
+\family default
+ beschermt de toestand van de painter (een 
+\family typewriter
+QPainter
+\family default
+ object), door telkens de toestand voor het aanroepen van de tekencode te
+ herstellen na de aanroep.
+ Dit vereist dat je de painter toestand telkens zelf correct instelt.
+\end_layout
+
+\begin_layout Enumerate
+
+\family typewriter
+QGraphicsView::DontAdjustForAntialiasing
+\family default
+: wanneer anti-aliasing is ingeschakeld (wat bij ons het geval is), kan
+ het zijn dat er stukjes buiten de bounding rectangles getekend worden.
+ De 
+\family typewriter
+QGraphicsView
+\family default
+ klasse lost dit op door de bounding rectangles in alle richtingen met 2
+ pixels uit te breiden.
+ Dat betekent uiteraard dat er ook telkens meer werk moet gebeuren.
+ Nadat we deze flag inschakelden, kon er op slechts één plaats een artifact
+ gevonden worden (in de animatie van 
+\family typewriter
+SudokuHUD
+\family default
+), en dat is opgelost door een gelijkaardige techniek.
+ Het verschil is dat er nu slechts één item met een grotere bounding rectangle
+ getekend wordt!
+\end_layout
+
+\begin_layout Standard
+Daarnaast is er nog één zeer opmerkelijke eigenschap van deze klasse: op
+ Windows wordt hij gerenderd door middel van OpenGL.
+ Op Mac OS X en Linux wordt geen OpenGL gebruikt omdat het er ten eerste
+ significant trager werkt en er ten tweede een hoop artifacts voorkomen.
+ Ook zien de lettertypen er erg slecht uit (zie figuur 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:render_mac"
+
+\end_inset
+
+).
+ Dit is dus een ander voorbeeld van een platform-specifieke optimalisatie.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Mét OpenGL
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename images/opengl_mac.png
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Zonder OpenGL
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename images/normal_mac.png
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Renderen met/zonder OpenGL op Mac OS X.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:render_mac"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+SudokuScene
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:SudokuScene"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De spelweergave wordt verzorgd door deze klasse.
+ 
+\family typewriter
+QGraphicsScene
+\family default
+ is de base class, zoals de naam al doet vermoeden.
+ In een 
+\family typewriter
+QGraphicsScene 
+\family default
+horen 
+\family typewriter
+QGraphicsItem
+\family default
+ objecten thuis: deze items zijn de objecten die je in de scene kunt zien
+ en waarmee je kan interageren.
+ Om geavanceerdere objecten te maken, moet je echter zelf afleiden van deze
+ klasse en dan zelf gaan tekenen (d.m.v.
+ 
+\family typewriter
+QPainter
+\family default
+).
+ Zo hebben we voor dit spel 3 klassen afgeleid van 
+\family typewriter
+QGraphicsItem
+\family default
+:
+\end_layout
+
+\begin_layout Enumerate
+
+\family typewriter
+SudokuElement
+\family default
+: om één element (puzzelvakje) in een sudoku puzzel voor te stellen (zie
+ sectie 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:SudokuElement"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+
+\family typewriter
+SudokuHUD
+\family default
+: deze toont alle informatie i.v.m.
+ het huidige spel (zie sectie 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:SudokuHUD"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+
+\family typewriter
+PauseOverlay
+\family default
+: dit item wordt toegevoegd telkens het spel gepauzeerd is en wordt daarna
+ weer vanzelf verwijderd (zie sectie 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:PauseOverlay"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+Deze klasse bevat de volgende items (zie ook opnieuw figuur 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:GUI-architectuur-diagram"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Enumerate
+81 
+\family typewriter
+SudokuElement 
+\family default
+objecten, één per puzzelvakje
+\end_layout
+
+\begin_layout Enumerate
+9
+\family typewriter
+ QGraphicsRectItem
+\family default
+ objecten, één per groep van 9 puzzelvakjes (dit is dan ook meteen de enige
+ door Qt meegeleverde 
+\family typewriter
+QGraphicsItem
+\family default
+-afgeleide die gebruikt wordt)
+\end_layout
+
+\begin_layout Enumerate
+1 
+\family typewriter
+SudokuHUD
+\family default
+ object
+\end_layout
+
+\begin_layout Enumerate
+1 
+\family typewriter
+PauseOverlay
+\family default
+ object; dit wordt enkel echt toegevoegd aan de scene wanneer het nodig
+ is, dus wanneer het spel gepauzeerd is.
+ Zoals de naam al doet vermoeden, heeft het 
+\family typewriter
+PauseOverlayEventFilter
+\family default
+ object hier veel mee te maken.
+ Zie respectievelijk secties 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:PauseOverlay"
+
+\end_inset
+
+en 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:PauseOverlayEventFilter"
+
+\end_inset
+
+ voor meer uitleg over deze klasses.
+\end_layout
+
+\begin_layout Standard
+De ongeveer honderd items 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://labs.trolltech.com/blogs/2006/08/30/4-million-items-is-it-really-possible
+\end_layout
+
+\end_inset
+
+ in de scene worden – indien je hier niet specifiek rekening mee houdt –
+ bij iedere update aan de scene, allemaal hertekend.
+ Dat is natuurlijk zeer inefficiënt.
+ Gelukkig bevat Qt al het wapen om de strijd mee aan te gaan: 
+\family typewriter
+QGraphicsScene->update(QRectF(x,
+\begin_inset space ~
+\end_inset
+
+y,
+\begin_inset space ~
+\end_inset
+
+w,
+\begin_inset space ~
+\end_inset
+
+h))
+\family default
+.
+ Daarbij moet je natuurlijk wel op ieder moment accuraat kunnen berekenen
+ wat de bounding rectangles zijn van ieder stukje dat kan geüpdatet worden.
+ Bovendien is onze GUI geheel herschaalbaar, wat dus impliceert dat de positie
+ en grootte van íeder item berekend wordt a.h.v.
+ de 
+\family typewriter
+Dimensions
+\family default
+ klasse 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "sub:Dimensions"
+
+\end_inset
+
+, anders zou het stoppen met werken.
+\end_layout
+
+\begin_layout Standard
+Maar ook de 
+\family typewriter
+QGraphicsItem->update(QRectF(x,
+\begin_inset space ~
+\end_inset
+
+y,
+\begin_inset space ~
+\end_inset
+
+w,
+\begin_inset space ~
+\end_inset
+
+h))
+\family default
+ method bestaat, dus binnen een item kan óók slechts een stuk hertekend
+ worden.
+ Bijvoorbeeld bij de animatie in de 
+\family typewriter
+SudokuHUD
+\family default
+ klasse 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "sub:SudokuHUD"
+
+\end_inset
+
+wordt dit gebruikt om bij de geanimeerde vooruitgangsindicator enkel dat
+ stuk te hertekenen.
+ Dit leverde een performance boost op van ongeveer 60%!
+\end_layout
+
+\begin_layout Standard
+Je zou verwachten dat in een klasse als deze geen speciale berekeningen
+ zitten.
+ 
+\family typewriter
+SudokuScene
+\family default
+ is echter een uitzondering: de sudoku applicatie laat namelijk toe om het
+ venster te resizen.
+ Dat klinkt niet buitengewoon, maar schijn bedriegt: een gewone resize functie
+ zou geen rekening houden met de aspect ratio.
+ De 
+\family typewriter
+resizeScene(int width, int height)
+\family default
+ method die je in listing 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "lst:SudokuScene::resizeScene()"
+
+\end_inset
+
+ vindt doet dat echter wel, en is slechts een twintigtal regels groot, maar
+ zeer krachtig!
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},float,language={C++}"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+
+void SudokuScene::resizeScene(int width, int height) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    setSceneRect(0, 0, width, height);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    // If the new aspect ratio (width to height) is greater than the initial
+\end_layout
+
+\begin_layout Plain Layout
+
+    // one, we must scale using width, otherwise using height, to maintain
+\end_layout
+
+\begin_layout Plain Layout
+
+    // the aspect ratio of the scene (and as a result to keep all items
+ of the
+\end_layout
+
+\begin_layout Plain Layout
+
+    // scene visible).
+\end_layout
+
+\begin_layout Plain Layout
+
+    double scale;
+\end_layout
+
+\begin_layout Plain Layout
+
+    if ((double) width / height > Dimensions::sceneRatio())
+\end_layout
+
+\begin_layout Plain Layout
+
+        scale = (double) height / Dimensions::sceneHeight;
+\end_layout
+
+\begin_layout Plain Layout
+
+    else
+\end_layout
+
+\begin_layout Plain Layout
+
+        scale = (double) width / Dimensions::sceneWidth;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    // Store in CPU registry because this will be used to scale *every*
+ item
+\end_layout
+
+\begin_layout Plain Layout
+
+    // in the scene!
+\end_layout
+
+\begin_layout Plain Layout
+
+    register double scaledScale = scale / m_currentScale;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    QGraphicsItem * item;
+\end_layout
+
+\begin_layout Plain Layout
+
+    foreach (item, this->items()) {
+\end_layout
+
+\begin_layout Plain Layout
+
+        item->setPos(item->pos() * scaledScale);
+\end_layout
+
+\begin_layout Plain Layout
+
+        item->scale(scaledScale, scaledScale);
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    m_currentScale = scale;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Scene resizing algoritme dat de aspect ratio behoudt
+\begin_inset CommandInset label
+LatexCommand label
+name "lst:SudokuScene::resizeScene()"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+SudokuElement
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:SudokuElement"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Deze klasse is afgeleid van 
+\family typewriter
+QGraphicsItem
+\family default
+, maar wordt daarvoor nog afgeleid van 
+\family typewriter
+QObject
+\family default
+.
+ Er is communicatie nodig tussen instanties van deze klasse en de scene
+ en daarvoor moet er altijd eerst afgeleid worden van 
+\family typewriter
+QObject
+\family default
+.
+ Een 
+\family typewriter
+QGraphicsItem
+\family default
+ is standaard een klasse zonder interactie: het bevat enkel code om te tekenen.
+ Er wordt dus door Qt verondersteld dat de interactie gebeurt op scene niveau,
+ maar in ons is het veel handiger om dat in deze klasse te doen: anders
+ zou de 
+\family typewriter
+SudokuScene
+\family default
+ klasse onhandelbaar groot worden.
+\end_layout
+
+\begin_layout Standard
+Deze klasse meer in detail bespreken zou langer zijn dan de implementatie
+ te lezen, omdat er zoveel verschillende dingen gebeuren.
+ Hover-, keypress-, mousepress- en focusevents worden ondersteund.
+ Er zijn verschillende 
+\emph on
+states
+\emph default
+ die worden bijgehouden, om zo het element op de juiste manier te tekenen.
+ De interactie met het spel verloopt grotendeels via deze klasse en het
+ is dus ook dankzij deze klasse dat dat zo intuïtief gaat.
+\end_layout
+
+\begin_layout Subsubsection
+SudokuHUD
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:SudokuHUD"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ook deze klasse wordt eerst afgeleid van 
+\family typewriter
+QObject
+\family default
+ en daarna pas van 
+\family typewriter
+QGraphicsItem
+\family default
+, om dezelfde reden als de 
+\family typewriter
+SudokuElement
+\family default
+ klasse.
+ Ze zorgt enkel voor het tonen van de huidige toestand van het spel.
+ Toch heeft ook deze klasse enkele noemenswaardige features.
+\end_layout
+
+\begin_layout Standard
+Om de kader met afgeronde hoeken te tekenen, moest er gebruik gemaakt worden
+ van een 
+\family typewriter
+QPainterPath
+\family default
+.
+ 
+\family typewriter
+QPainter::DrawRoundRect()
+\family default
+ is nutteloos omdat het enkel vierkanten met ronde hoeken kan tekenen.
+ Als je er een rechthoek van maakt, krijg je een ellips! Dit is opgelost
+ in Qt 4.4, waar deze method verwijderd is en 
+\family typewriter
+QPainter::DrawRoundedRect()
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-21"
+
+\end_inset
+
+
+\family default
+ is toegevoegd (
+\begin_inset Quotes eld
+\end_inset
+
+Rounded
+\begin_inset Quotes erd
+\end_inset
+
+ versus 
+\begin_inset Quotes eld
+\end_inset
+
+Round
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Daarnaast is er ook een animatie (zie figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SudokuHUD-animatie"
+
+\end_inset
+
+), die getoond wordt wanneer een bord gegenereerd wordt (in een apart thread,
+ zie sectie 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:BoardGenerator"
+
+\end_inset
+
+).
+ Zo is het op alle momenten duidelijk voor de gebruiker dat de applicatie
+ niet gestopt is met werken.
+ Animaties in Qt zijn mogelijk door een 
+\family typewriter
+QTimer
+\family default
+ en te combineren met een statische variabele (om bij te houden wat de vorige
+ positie was).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename images/SudokuHUD.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+De animatie in 
+\family typewriter
+SudokuHUD.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:SudokuHUD-animatie"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+SudokuGame
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:SudokuGame"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Kort samengevat: deze klasse bevat alle logica om het spel in de juiste
+ banen te leiden.
+ Het is het 
+\emph on
+model
+\emph default
+ in de Model-View architectuur (zie 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:Model-View-architectuur"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Maar ook deze klasse heeft enkele opmerkelijke eigenschappen.
+ Zo zijn er bijvoorbeeld 2 manieren om een instantie van dit object aan
+ te maken:
+\end_layout
+
+\begin_layout Enumerate
+
+\family typewriter
+SudokuGame::SudokuGame(int
+\begin_inset space ~
+\end_inset
+
+difficulty)
+\family default
+: deze constructor wordt gebruikt om nieuwe spellen aan te maken, van de
+ opgegeven moeilijkheidsgraad.
+ De constructor zelf maakt echter enkel een 
+\emph on
+leeg
+\emph default
+ bord aan.
+ Het is aan de programmeur om te bepalen wanneer het echte bord gegenereerd
+ moet worden, door 
+\family typewriter
+SudokuGame::start()
+\family default
+ aan te roepen.
+ Deze maakt een nieuw bord aan door 
+\family typewriter
+QueueBoardGeneration(m_board,
+\begin_inset space ~
+\end_inset
+
+m_difficulty)
+\family default
+ aan te roepen, waardoor het genereren van het bord in het 
+\family typewriter
+BoardGenerator
+\family default
+ object en dus in een ander thread gebeurt (een 
+\family typewriter
+QThread
+\family default
+ is een afgeleide van 
+\family typewriter
+QObject
+\family default
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-9"
+
+\end_inset
+
+).
+ Wanneer het bord gegenereerd is, zendt het 
+\family typewriter
+BoardGenerator
+\family default
+ object een 
+\family typewriter
+boardGenerated(int
+\begin_inset space ~
+\end_inset
+
+generationTime)
+\family default
+ signaal uit, welke wordt opgevangen in de 
+\family typewriter
+SudokuGame
+\family default
+ klasse.
+ Vervolgens stopt de 
+\family typewriter
+SudokuGame
+\family default
+ klasse de animatie in de 
+\family typewriter
+SudokuHUD
+\family default
+ (dmv het 
+\family typewriter
+working(bool)
+\family default
+ signaal) en stuurt het het 
+\family typewriter
+SudokuGame::ready(bool)
+\family default
+ signaal uit.
+ Het spel is dan klaar om gespeeld te worden.
+\end_layout
+
+\begin_layout Enumerate
+
+\family typewriter
+SudokuGame::SudokuGame(Board
+\begin_inset space ~
+\end_inset
+
+*
+\begin_inset space ~
+\end_inset
+
+board)
+\family default
+: deze constructor is een heel stuk eenvoudiger dan in gebruik dan de vorige,
+ omdat er geen threading aan te pas komt.
+ Hij ontvangt namelijk gewoon een gegenereerd bord, en wordt dus gebruikt
+ bij het importeren van bestaande borden, bijvoorbeeld om 
+\family typewriter
+csv
+\family default
+ bestanden (zie sectie 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:CSV"
+
+\end_inset
+
+) in te lezen.
+\end_layout
+
+\begin_layout Standard
+Omdat Sudoku slechts door 1 persoon tegelijk gespeeld wordt, is de spellogica
+ zelf zeer eenvoudig: zolang het bord niet volledig én geldig is ingevuld,
+ is het spel niet gedaan.
+ We moeten dus enkel de 
+\family typewriter
+Board::IsFull()
+\family default
+ en 
+\family typewriter
+Board::IsValid()
+\family default
+ methods aanroepen om dit te controleren.
+\end_layout
+
+\begin_layout Standard
+Ten slotte is de rest van deze klasse voornamelijk gevuld met het omzetten
+ en opvangen van signals en slots, het berekenen van de door de gebruiker
+ gewenste informatie die in de 
+\family typewriter
+SudokuHUD
+\family default
+ komt (maar wel énkel de informatie die ook daadwerkelijk gebruikt wordt!),
+ en het aan 
+\family typewriter
+SudokuScene
+\family default
+ melden van veranderingen op het spelbord.
+\end_layout
+
+\begin_layout Subsubsection
+PauseOverlay
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:PauseOverlay"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De 
+\family typewriter
+PauseOverlay
+\family default
+ klasse is een simpele afgeleide van 
+\family typewriter
+QGraphicsItem
+\family default
+.
+ Er stelde zich echter een probleem: we wilden onze applicatie vertaalbaar
+ maken, maar de 
+\family typewriter
+tr()
+\family default
+ functie is enkel beschikbaar in afgeleides van 
+\family typewriter
+QObject
+\family default
+ en 
+\family typewriter
+QCoreApplication
+\family default
+.
+ Gelukkig voorziet Qt ook hier een oplossing: door de macro 
+\family typewriter
+Q_DECLARE_TR_FUNCTIONS(PauseOverlay)
+\family default
+ toe te voegen (vergelijkbaar met de 
+\family typewriter
+Q_OBJECT
+\family default
+ macro), is de 
+\family typewriter
+tr()
+\family default
+ functie beschikbaar binnen de klasse alsof er niets aan de hand is.
+\end_layout
+
+\begin_layout Subsubsection
+PauseOverlayEventFilter
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:PauseOverlayEventFilter"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Een event filter dient, zoals de naam al zegt, om events te filteren: je
+ kan kiezen welke events je een speciale behandeling wil geven en welke
+ door de filter heen geraken (en welke dus op de normale manier verder afgehande
+ld worden).
+\end_layout
+
+\begin_layout Standard
+De 
+\family typewriter
+PauseOverlayEventFilter
+\family default
+ wordt geïnstalleerd op de scene (door 
+\family typewriter
+SudokuScene
+\family default
+ zelf) telkens het spel gepauzeerd wordt.
+ Dit voorkomt dat input van toetsenbord en muis de 
+\family typewriter
+SudokuElement
+\family default
+ objecten bereikt.
+ Slechts door een dubbelklik (opgevangen door 
+\family typewriter
+PauseOverlayEventFilter
+\family default
+ zelf) of door het gebruik van pauzeer-sneltoets 
+\family typewriter
+P
+\family default
+ (wordt opgevangen door 
+\family typewriter
+MainWindow
+\family default
+) kan het spel dan verdergezet worden.
+\end_layout
+
+\begin_layout Subsubsection
+Evolutie
+\end_layout
+
+\begin_layout Standard
+Het eindresultaat ziet er een stuk beter uit dan de eerste versies.
+ Dit is logisch, maar als je weet dat dit de eerste keer was dat we met
+ QGraphicsView en de verwante klasses hebben gewerkt, is dat eens zo aannemelijk.
+ In de eerste fase hebben we erop gefocust om vooral een duidelijke en goed
+ werkende GUI te hebben (zie figuren 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:GUI-evolution-1"
+
+\end_inset
+
+ en 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:GUI-evolution-2"
+
+\end_inset
+
+).
+ Daarna, toen de HUD moest toegevoegd worden (figuur 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:GUI-evolution-3"
+
+\end_inset
+
+), hebben we beroep gedaan op Kaj Heijmans om ons van een mooier kleurenschema
+ te voorzien (figuur 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:GUI-evolution-4"
+
+\end_inset
+
+).
+ We zijn zeer tevreden over het eindresultaat, dat je kan zien op figuur
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:GUI-evolution-5-6"
+
+\end_inset
+
+.
+ Kaj heeft ook het icoontje ontworpen.
+ Programmeurs hebben zelden of nooit goede design skills, daarom dat we
+ ervoor gekozen hebben om daarvoor iemand anders in te schakelen.
+ Ten slotte zijn wij het die het hebben geïmplementeerd, dus vonden we het
+ niet erg om dit aan iemand anders toe te vertrouwen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/GUI_evolution_1.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Eerste versie van de Sudoku GUI - nog zonder HUD.
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:GUI-evolution-1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/GUI_evolution_2.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Initiële versie van de HUD en het 
+\family typewriter
+PauseOverlay
+\family default
+.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:GUI-evolution-2"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/GUI_evolution_3.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Mock-up van de HUD.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:GUI-evolution-3"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/GUI_evolution_4.jpg
+	scale 50
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Mock-up van nieuw kleurenschema in overleg met Kaj Heijmans.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:GUI-evolution-4"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Aan het spelen.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename images/GUI_evolution_5.png
+	scale 47
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Gepauzeerd.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename images/GUI_evolution_6.png
+	scale 47
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Geüpdatete GUI op basis van de mockup uit figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:GUI-evolution-3"
+
+\end_inset
+
+ en het kleurenschema uit figuur 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:GUI-evolution-4"
+
+\end_inset
+
+.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:GUI-evolution-5-6"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Algoritmes
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Algoritmes"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In onze applicatie hebben we ernaar gestreefd zo efficiënt mogelijke algoritmen
+ te ontwikkelen, zonder dat deze efficiëntie ten koste moest gaan van de
+ intuïtieve manier waarop ons generatiealgoritme werkt.
+ We hebben er dan ook voor geopteerd om geen puzzels tijdens het spel te
+ genereren, of tijdelijke puzzels bij te houden.
+ Alles moest gegenereerd worden in een voor de gebruiker aanvaardbare tijd.
+\end_layout
+
+\begin_layout Standard
+Er worden in onze applicatie verschillende algoritmen gebruikt, die zich
+ voornamelijk bevinden in de Sudoku klasse.
+ De drie belangrijkste algoritmen worden hieronder kort besproken.
+\end_layout
+
+\begin_layout Subsubsection
+ScanSolve()
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+ScanSolve()
+\family default
+ is het algoritme dat de sudoku op een intuïtief aanvoelende manier zal
+ proberen op te lossen.
+ Dit is ons efficiëntste oplossingsalgoritme.
+\end_layout
+
+\begin_layout Standard
+Het algoritme werkt door voor elke positie op het bord een array van booleans
+ aan te maken waarin het bijhoudt welke zetten nog mogelijk zijn voor die
+ positie.
+ Dit gebeurt door voor elk van deze elementen alle nog mogelijke (niet uit
+ het array verwijderde) zetten te proberen.
+ De zetten die niet mogelijk zijn schrappen we uit dit array.
+ Wanneer een vakje nog maar één mogelijkheid heeft, wordt deze mogelijkheid
+ permanent ingevuld, zodat 
+\family typewriter
+ScanSolve()
+\family default
+ met dit verder opgeloste bord kan verderwerken.
+\end_layout
+
+\begin_layout Standard
+Dit proces wordt herhaald zo lang er nog vakjes op het bord zijn waarvan
+ mogelijkheden weggeschrapt kunnen worden.
+ Als dit niet meer lukt, en het bord is vol, dan heeft 
+\family typewriter
+ScanSolve()
+\family default
+ de puzzel opgelost.
+ Is het bord niet vol, dan moeten we 
+\family typewriter
+BackTrackSolve()
+\family default
+ gebruiken om de puzzel verder op te lossen.
+\end_layout
+
+\begin_layout Standard
+Deze functie maakt ook gebruik van de method 
+\family typewriter
+IsValidMove()
+\family default
+ uit de 
+\family typewriter
+Board
+\family default
+ klasse.
+ Die kijkt simpelweg in alle richtingen (alsook in het vierkant) of het
+ getal al voorkomt.
+\end_layout
+
+\begin_layout Standard
+Het belangrijkste stuk uit dit algoritme kan in Listing 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "lst:ScanSolve"
+
+\end_inset
+
+ teruggevonden worden.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},float,language={[ANSI]C++}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+while (!board->IsFull() && found) { // While possible moves
+\end_layout
+
+\begin_layout Plain Layout
+
+   found = false; // Keep if we have filled in an element
+\end_layout
+
+\begin_layout Plain Layout
+
+   for (int y = 0; y < 9; ++y)
+\end_layout
+
+\begin_layout Plain Layout
+
+      for (int x = 0; x < 9; ++x) {
+\end_layout
+
+\begin_layout Plain Layout
+
+         numPossible = 0; // We keep the number of possibilities
+\end_layout
+
+\begin_layout Plain Layout
+
+         for (int e = 1; e < 10; ++e) { // Looking for possible
+\end_layout
+
+\begin_layout Plain Layout
+
+                                        // solutions per box
+\end_layout
+
+\begin_layout Plain Layout
+
+            if (possibleSolutions[x][y][e]) {
+\end_layout
+
+\begin_layout Plain Layout
+
+               possibleSolutions[x][y][e] = board->IsValidMove(x, y, e);
+\end_layout
+
+\begin_layout Plain Layout
+
+                 if (possibleSolutions[x][y][e]) // If it is still valid
+\end_layout
+
+\begin_layout Plain Layout
+
+                    ++numPossible;
+\end_layout
+
+\begin_layout Plain Layout
+
+            }
+\end_layout
+
+\begin_layout Plain Layout
+
+         }
+\end_layout
+
+\begin_layout Plain Layout
+
+         if (numPossible == 1) {
+\end_layout
+
+\begin_layout Plain Layout
+
+            for (int e = 1; e < 10; ++e)
+\end_layout
+
+\begin_layout Plain Layout
+
+               if (possibleSolutions[x][y][e])
+\end_layout
+
+\begin_layout Plain Layout
+
+                  board->Set(x, y, e);
+\end_layout
+
+\begin_layout Plain Layout
+
+               found = true;
+\end_layout
+
+\begin_layout Plain Layout
+
+         }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+return board->IsFull();
+\begin_inset Caption
+
+\begin_layout Plain Layout
+ScanSolve()
+\begin_inset CommandInset label
+LatexCommand label
+name "lst:ScanSolve"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+BackTrackSolve()
+\end_layout
+
+\begin_layout Standard
+Dit algoritme is het zwaardere oplosalgoritme in ons programma.
+ Het zal dan ook enkel gebruikt worden wanneer de puzzel niet oplosbaar
+ is door 
+\family typewriter
+ScanSolve()
+\family default
+.
+ Ook zal voor elke uitvoering van 
+\family typewriter
+BackTrackSolve() ScanSolve()
+\family default
+ sowieso aangeroepen worden, gezien 
+\family typewriter
+BackTrackSolve()
+\family default
+ hier altijd voordeel uit haalt, en ook omdat we dan zeker weten dat 
+\family typewriter
+ScanSolve()
+\family default
+ de puzzel niet kan oplossen.
+ Dit voorbereindende werk gebeurt door de 
+\family typewriter
+SolveBoard()
+\family default
+ functie.
+\end_layout
+
+\begin_layout Standard
+Sudoku's die niet kunnen opgelost worden door 
+\family typewriter
+ScanSolve()
+\family default
+ zullen echter niet gegenereerd worden door ons programma (omdat dit geen
+ 
+\emph on
+echte
+\emph default
+ sudoku's zijn).
+ Het 
+\family typewriter
+BackTrackSolve()
+\family default
+ algoritme zal dan ook enkel gebruikt worden voor het oplossen van borden
+ die de gebruiker zelf heeft ingelezen (bijvoorbeeld via 
+\family typewriter
+csv
+\family default
+) en die niet oplosbaar zijn door 
+\family typewriter
+ScanSolve()
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+Het algoritme zelf is een eenvoudig backtracking algoritme met enkele sudoku-spe
+cifieke aanpassingen.
+ Zo zal het een pointer naar een bord en een startpositie op het bord als
+ parameters krijgen.
+ Er wordt dan gezocht naar het eerstvolgende element dat niet ingevuld is,
+ tenzij we een vol bord hebben (dit is dan namelijk geldig dankzij de vorige
+ backtracking stappen, en dankzij de geldigheidscontrole in 
+\family typewriter
+SolveBoard()
+\family default
+).
+ Hierna probeert het algoritme voor alle geldige zetten op deze plaats recursief
+ verder op te lossen.
+ Als dit lukt wordt de zet definitief ingevuld (we werken immers met een
+ pointer naar het bord) en wordt er verder recursief gewerkt.
+ Als we bij het recursief oplossen een vol bord krijgen wordt dit gemeld
+ aan de oproepende functie, zodat we weten dat het bord opgelost is.
+ Lukt het niet om een geldig vol bord te krijgen, dan verwijderen we het
+ element van de huidig behandelde locatie, zodat de oproepende functie een
+ ander getal kan proberen.
+\end_layout
+
+\begin_layout Standard
+Het belangrijkste stuk uit dit algoritme is afgebeeld in Listing 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "lst:BackTrackSolve"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},float,language={C++}"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+
+/* Find the first element that is not filled in,
+\end_layout
+
+\begin_layout Plain Layout
+
+ * and set foundzero accordingly */
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+if (!solved && foundzero) { // Backtrack only if 0 found
+\end_layout
+
+\begin_layout Plain Layout
+
+    for (int e = 1; e < 10 && !solved; ++e)
+\end_layout
+
+\begin_layout Plain Layout
+
+        if (board->IsValidMove(x, y, e)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+            board->Set(x, y, e);
+\end_layout
+
+\begin_layout Plain Layout
+
+            if (BackTrackSolve(board, x + 1, y))
+\end_layout
+
+\begin_layout Plain Layout
+
+               solved = true;
+\end_layout
+
+\begin_layout Plain Layout
+
+            else
+\end_layout
+
+\begin_layout Plain Layout
+
+               board->Remove(x, y);
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+return solved;
+\begin_inset Caption
+
+\begin_layout Plain Layout
+BackTrackSolve()
+\begin_inset CommandInset label
+LatexCommand label
+name "lst:BackTrackSolve"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+GenerateBoard()
+\end_layout
+
+\begin_layout Standard
+Het 
+\family typewriter
+GenerateBoard()
+\family default
+ algoritme is het meest uitgebreide algoritme van onze applicatie.
+ De bedoeling van dit algoritme is in eerste instantie puzzels met een zo
+ intuïtief mogelijk aanvoelende moeilijkheidsgraad te genereren, en deze
+ puzzels toch zo 'willekeurig' mogelijk houden.
+ We hebben hiervoor een aanpak gekozen die erg verschilt van de standaard
+ methoden om sudoku's te genereren.
+ In plaats van bijvoorbeeld het aantal elementen of het aantal iteraties
+ de moeilijkheidsgraad te laten bepalen, hebben we er namelijk voor geopteerd
+ om deze te laten afhangen van het aantal mogelijke manieren waarop het
+ bord op te lossen valt.
+ Dit wordt meteen duidelijker, wanneer we het algoritme bespreken.
+\end_layout
+
+\begin_layout Standard
+Het algoritme zelf kan beter uitgelegd worden als we het onderverdelen in
+ enkele stappen:
+\end_layout
+
+\begin_layout Enumerate
+Eerst wordt er een volledig opgelost bord gegenereerd.
+ Hiervoor zorgt de 
+\family typewriter
+GenerateRandomSolution()
+\family default
+ functie.
+ Deze zal 25 willekeurige getallen op willekeurige plaatsen van het bord
+ zetten.
+ We proberen dan het bord op te lossen.
+ Als dit niet zou lukken, worden er gewoon andere willekeurige getallen
+ geprobeerd.
+ De reden dat dit er exact 25 zijn komt voort uit uitvoerig testen van verschill
+ende waarden, waarbij er bij 25 geplaatste getallen gemiddeld het minste
+ tijd werd besteed aan het genereren van een oplossing.
+ Er zijn 2 redenen waarom we, wanneer het bord niet oplosbaar blijkt, telkens
+ een nieuw bord genereren in plaats van gewoon incrementeel te werken met
+ minder dan 25 getallen:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Het bord is nu meer 'random' dan we op een incrementele manier verwezenlijkt
+ zouden krijgen met het gebruik van oplossingsalgoritmen.
+\end_layout
+
+\begin_layout Enumerate
+Deze methode duurt effectief gemiddeld minder lang (bij het genereren van
+ bijvoorbeeld 100 borden).
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Hierna gaan we (ook weer op willekeurige plaatsen) elementen wegnemen uit
+ het bord, waarbij we telkens kijken of het bord nog steeds oplosbaar blijft
+ door het 
+\family typewriter
+ScanSolve()
+\family default
+ algoritme.
+ Elk van de verwijderde elementen zetten we tevens in een lijst (
+\family typewriter
+undoList
+\family default
+), die we later nog nodig zullen hebben.
+ Als er geen elementen meer verwijderd kunnen worden zonder dat het bord
+ onoplosbaar wordt, gaan we naar de volgende stap.
+\end_layout
+
+\begin_layout Enumerate
+Dit is de belangrijkste stap van ons algoritme.
+ Hierin gaan we er namelijk voor zorgen dat er een duidelijk verschil is
+ tussen de verschillende niveaus.
+ Dit doen we door opnieuw een willekeurig element van het bord te verwijderen,
+ en dit op een 
+\family typewriter
+redoStack
+\family default
+ te zetten.
+ We hebben dan een onoplosbaar bord (daarvoor zorgt de voorgaande stap),
+ dat we terug oplosbaar gaan proberen te maken.
+ Zo krijgen we meerdere 
+\emph on
+paden
+\emph default
+ volgens welke het bord opgelost kan worden.
+\begin_inset Newline newline
+\end_inset
+
+Het opnieuw oplosbaar maken van het bord gebeurt door één voor één elk element
+ van de voorheen aangemaakte 
+\family typewriter
+undoList
+\family default
+ terug te zetten tot er een element is waarbij ScanSolve() er weer in slaagt
+ het bord op te lossen.
+ Als dit niet lukt wordt dit element weer van het bord gehaald, en gaan
+ we verder met het volgende element op de 
+\family typewriter
+undoList
+\family default
+.
+ Als dit echter wel lukt, zal het element van de 
+\family typewriter
+undoList
+\family default
+ gehaald worden en op de 
+\family typewriter
+redoStack
+\family default
+ geplaatst worden, zodat we het na uitvoering van dit stuk van het algoritme
+ terug op het bord kunnen plaatsen.
+\begin_inset Newline newline
+\end_inset
+
+Deze stap van het algoritme blijven we een aantal keren herhalen, waarbij
+ het aantal bepaald wordt door het niveau.
+\end_layout
+
+\begin_layout Enumerate
+De laatste stap bestaat er dan enkel nog in om te kijken of er genoeg elementen
+ konden terug gezet worden op het bord (zodat het gewenste niveau bereikt
+ is).
+ Als dit zo is, moeten we de gewiste elementen nog terugplaatsen en is het
+ algoritme afgelopen.
+ Is dit niet zo, dan beginnen we helemaal opnieuw van het begin.
+ Dit lijkt misschien geen goede beslissing, maar uitproberen leert ons dat
+ het beter is om het hele algoritme te herstarten, dan om verdere aanpassingen
+ te maken aan het huidige bord (gezien dit voor lange recursieve stukken
+ in het algoritme zou zorgen).
+ Ons algoritme is overigens nog steeds erg efficiënt (gemiddeld rond de
+ 25ms voor het genereren van een bord op een 1.7Ghz processor).
+\end_layout
+
+\begin_layout Standard
+Tot slot volgt in listing 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lst:GenerateBoard"
+
+\end_inset
+
+ nog het belangrijkste stuk uit dit algoritme (het stuk waarin we elementen
+ terug op het bord plaatsen om het niveau te bepalen).
+ We excuseren ons voor de onoverzichtelijkheid.
+ Het algoritme zelf kan natuurlijk altijd gevonden worden in de broncode,
+ waar de formatting beter is.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\footnotesize},float,language={C++}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+while (reinsert > 0 && stillFoundOne) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  stillFoundOne = false;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  int yoffset = rand() % 9; // So we don't always start erasing the first
+ few elements
+\end_layout
+
+\begin_layout Plain Layout
+
+  int xoffset = rand() % 9;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  for (int y = 0; y < 9 && reinsert > 0 && !undoList.empty(); ++y)
+\end_layout
+
+\begin_layout Plain Layout
+
+    for (int x = 0; x < 9 && reinsert > 0 && !undoList.empty(); ++x) {
+\end_layout
+
+\begin_layout Plain Layout
+
+      int realx = (x + xoffset) % 9; // The real x and y positions
+\end_layout
+
+\begin_layout Plain Layout
+
+      int realy = (y + yoffset) % 9;
+\end_layout
+
+\begin_layout Plain Layout
+
+            
+\end_layout
+
+\begin_layout Plain Layout
+
+      PositionElement pe(realx, realy, board->Get(realx, realy));
+\end_layout
+
+\begin_layout Plain Layout
+
+      redoStack.push(pe);
+\end_layout
+
+\begin_layout Plain Layout
+
+      board->Remove(realx, realy); // Remove the element from the board
+\end_layout
+
+\begin_layout Plain Layout
+
+                                   // and try to solve it again
+\end_layout
+
+\begin_layout Plain Layout
+
+                
+\end_layout
+
+\begin_layout Plain Layout
+
+      bool foundOne = false;
+\end_layout
+
+\begin_layout Plain Layout
+
+      list<PositionElement>::iterator it;
+\end_layout
+
+\begin_layout Plain Layout
+
+      for (it = undoList.begin(); it != undoList.end() && !foundOne;) {
+\end_layout
+
+\begin_layout Plain Layout
+
+        board->Set(it->GetX(), it->GetY(), it->GetE());
+\end_layout
+
+\begin_layout Plain Layout
+
+        if (BoardIsSolvable(*board, true)) { // Board is solvable by ScanSolve()
+\end_layout
+
+\begin_layout Plain Layout
+
+          PositionElement addableElement(it->GetX(), it->GetY(), it->GetE());
+\end_layout
+
+\begin_layout Plain Layout
+
+          redoStack.push(addableElement);
+\end_layout
+
+\begin_layout Plain Layout
+
+                           
+\end_layout
+
+\begin_layout Plain Layout
+
+          it = undoList.erase(it); // Remove from the undoList and add to
+ the redoStack
+\end_layout
+
+\begin_layout Plain Layout
+
+          --reinsert;
+\end_layout
+
+\begin_layout Plain Layout
+
+          foundOne = true;
+\end_layout
+
+\begin_layout Plain Layout
+
+          stillFoundOne = true;
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+        else
+\end_layout
+
+\begin_layout Plain Layout
+
+          it++;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+        board->Remove(realx, realy); // Removed in BOTH CASES!
+\end_layout
+
+\begin_layout Plain Layout
+
+                    
+\end_layout
+
+\begin_layout Plain Layout
+
+        if (!foundOne && !redoStack.empty()) {
+\end_layout
+
+\begin_layout Plain Layout
+
+          board->Set(redoStack.top().GetX(), redoStack.top().GetY(), redoStack.top().G
+etE());
+\end_layout
+
+\begin_layout Plain Layout
+
+          redoStack.pop();
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+GenerateBoard()
+\begin_inset CommandInset label
+LatexCommand label
+name "lst:GenerateBoard"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Bestandsstructuren
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Bestandsstructuren"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+CSV
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:CSV"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We voorzien de mogelijkheid om het spelbord te exporteren (en in te lezen)
+ in het 
+\family typewriter
+csv
+\family default
+ formaat.
+ Dit is een veelvoorkomend formaat, waarin gegevens van elkaar gescheiden
+ worden door komma's of newlines.
+ Bij ons is dit niet anders: een rij van het bord is een regel in het 
+\family typewriter
+csv
+\family default
+ bestand, met de getallen voor deze rij gescheiden door komma's.
+\end_layout
+
+\begin_layout Standard
+Dit formaat is vooral handig voor het importeren in andere toepassingen
+ (bijvoorbeeld spreadsheet programma's), en om borden in te lezen die de
+ gebruiker zelf heeft ingegeven.
+ Zo kan de gebruiker bijvoorbeeld een bestaande sudoku puzzel uit een krant
+ in zijn favoriete teksteditor ingeven, om hem vervolgens te laten oplossen
+ door ons programma.
+\end_layout
+
+\begin_layout Subsubsection
+Serialized
+\end_layout
+
+\begin_layout Standard
+De geserialiseerde import/export functie wordt gebruikt om volledige spellen
+ op te slaan en in te lezen.
+ Dit houdt in dat niet enkel het bord, maar ook gegevens zoals de speeltijd
+ en de tijdelijke keuzes worden opgeslagen, samen met welke gegevens de
+ gebruiker als zichtbaar heeft ingesteld in de HUD.
+\end_layout
+
+\begin_layout Subsubsection
+PNG
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:PNG"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Er is ondersteuning om een spelbord te exporteren naar het PNG formaat.
+ Dit kan handig zijn om een Sudoku te delen met iemand anders, of om later
+ af te drukken.
+ Enkel de Sudoku puzzel zelf, dus niet de HUD, wordt hierbij geëxporteerd.
+ De achtergrond wordt transparant ingesteld.
+ Om dit te vereenvoudigen – want hetzelfde moet gebeuren bij het afdrukken
+ van een Sudoku puzzel – is er de 
+\family typewriter
+SudokuScene::renderBoard()
+\family default
+ method.
+ Deze method rendert het bord naar een 
+\family typewriter
+QPainter
+\family default
+ object.
+ Dit 
+\family typewriter
+QPainter
+\family default
+ object werd daarvoor aangemaakt met als paint device een 
+\family typewriter
+QImage
+\family default
+.
+ Zo wordt er dus letterlijk gerenderd naar een afbeelding.
+\end_layout
+
+\begin_layout Subsection
+Overige
+\end_layout
+
+\begin_layout Subsubsection
+Vertaalbaarheid
+\end_layout
+
+\begin_layout Standard
+Het hele programma is vertaalbaar.
+ Qt biedt hier uitstekende ondersteuning voor 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
+\end_inset
+
+.
+ We leveren alvast een Nederlandse vertaling mee.
+ De juiste taal wordt automatisch gekozen aan de hand van de system locale.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename images/Schermafdruk-linux.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Vertaald Sudoku spel.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Slechts één afbeelding en gradiënten
+\end_layout
+
+\begin_layout Standard
+Het programma oogt mooi en aangenaam, maar toch zit er in het hele programma
+ slechts één afbeelding: het programma icoon.
+ Alle gradiënten die je ziet (in alle 
+\family typewriter
+SudokuElement
+\family default
+en en de 
+\family typewriter
+SudokuHUD
+\family default
+) worden dynamisch gegenereerd.
+ Deze gradiënten worden bovendien slechts éénmaal gegenereerd.
+\end_layout
+
+\begin_layout Subsubsection
+Instellingen onthouden
+\end_layout
+
+\begin_layout Standard
+Alle instellingen in het programma, dus de HUD-instellingen van het spel
+ en de moeilijkheidsgraad in het dialoogvenster om een nieuw spel te starten,
+ worden onthouden door middel van 
+\family typewriter
+QSettings
+\family default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Cross-platform problemen en Qt bugs
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Cross-platform-problemen-en"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Er zijn verscheidene problemen die optraden omdat we Sudoku cross-platform
+ hebben gemaakt:
+\end_layout
+
+\begin_layout Enumerate
+Normaal gezien zou renderen d.m.v.
+ OpenGL probleemloos moeten werken, maar het werkt enkel betrouwbaar op
+ Windows.
+ Zie sectie 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:SudokuView"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Het programma werkte probleemloos in Linux en Mac OS X, maar wanneer het
+ in Windows uitgevoerd werd, crashte het steevast omdat er iets mis zou
+ zijn met de iterators.
+ Uiteindelijk bleek dat iterators op Windows lichtjes anders werken dan
+ wij gewoon waren onder Linux en Mac OS X.
+\end_layout
+
+\begin_layout Enumerate
+Ook threading werkte zonder problemen in Linux en Mac OS X, maar crashte
+ in Windows, meerbepaald bij het beëindigen van een thread ging het mis.
+ Uiteindelijk hebben we dit opgelost door gebruik te maken van het standaard
+ 
+\family typewriter
+QObject
+\family default
+ destructie model om threads succesvol te beëindigen op alle platformen.
+\end_layout
+
+\begin_layout Enumerate
+X11 ondersteunt het 
+\family typewriter
+QEvent::ApplicationDeactivate
+\family default
+ event niet, waardoor de applicatie niet automatisch gepauzeerd werd wanneer
+ het de focus verliest.
+ Zie sectie 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sub:SudokuApp"
+
+\end_inset
+
+ voor meer details.
+\end_layout
+
+\begin_layout Enumerate
+Er waren problemen met het opvangen van keyboard events op Mac OS X: de
+ combinatie 
+\family typewriter
+ALT
+\family default
++6 wordt nóóit opgevangen, en de combinatie 
+\family typewriter
+ALT
+\family default
++7 soms.
+\end_layout
+
+\begin_layout Enumerate
+Het 
+\family typewriter
+QGraphicsItem::contextMenuEvent()
+\family default
+ wordt helemaal niet aangeroepen op Mac OS X, maar wel op Linux.
+\end_layout
+
+\begin_layout Enumerate
+Wanneer Sudoku werd afgesloten op Windows, bleef het proces nog actief:
+ het programma werd niet correct afgesloten.
+ Dit gebeurde zowel met de MingW
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://www.mingw.org/
+\end_layout
+
+\end_inset
+
+ als met de Visual Studio 2005 compiler, telkens met versie 4.3.2 van Qt.
+ Na een upgrade naar versie 4.4 van Qt was dit opgelost.
+\end_layout
+
+\begin_layout Section
+Taakverdeling en planning
+\end_layout
+
+\begin_layout Subsection
+Taakverdeling
+\end_layout
+
+\begin_layout Subsubsection
+Bram Bonné
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+Board alles
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+Sudoku alles
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+algemeen vertalingen, op punt stellen van verslagen
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+Qt laden en opslaan van het spel
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+platformen Linux
+\end_layout
+
+\begin_layout Subsubsection
+Wim Leers
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+Qt alles behalve het hierboven genoemde
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+threading alles
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+FileIO alles (herbruikt uit vorig project: Reversi, voor het vak Object
+ Georiënteerd Programmeren)
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+algemeen GUI gedeelte van het verslag
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+platformen Mac OS X en Windows (alsook Linux build script)
+\end_layout
+
+\begin_layout Subsection
+Logboek / Planning
+\end_layout
+
+\begin_layout Standard
+Om dit project te realiseren hebben we verschillende stadia doorlopen.
+ Deze beschrijven we hieronder.
+\end_layout
+
+\begin_layout Standard
+Aan het begin van het project hebben we eerst uitvoerig geanalyseerd en
+ besproken wat de klassenstructuur zou worden.
+ We stelden toen reeds een voorlopig UML klassendiagram op, hetgeen weinig
+ gewijzigd is doorheen het project.
+ Ook maakten we toen afspraken over hoe de verschillende delen van het programma
+ met elkaar zouden interageren.
+ Tenslotte bepaalden we de structuur van de 
+\family typewriter
+svn
+\family default
+ repository en plaatsten we hier de header files in die we samen gemaakt
+ hadden.
+\end_layout
+
+\begin_layout Standard
+Tijdens de paasvakantie is er nog bijkomend opzoekingswerk gebeurd met betrekkin
+g tot de algoritmen, en begon Bram met pseudocode op te stellen van de verschill
+ende oplossings- en generatiealgoritmen, zodat het na de paasvakantie nog
+ een kwestie van enkele uren was om de eerste versies van deze algoritmes
+ werkende te hebben.
+\end_layout
+
+\begin_layout Standard
+Ons eerste doel was zo snel mogelijk ervoor te zorgen dat er een spel gespeeld
+ kon worden, zonder dat dit al soepel moest verlopen.
+ Dit realiseerden we in korte tijd zodat het veel gemakkelijker werd om
+ de algoritmen te testen en verder aan te passen.
+\end_layout
+
+\begin_layout Standard
+De volgende stap was om het geheel wat gebruiksvriendelijker te maken, en
+ al stilaan aan de extra's te beginnen.
+ Het opslaan en inlezen was in een mum van tijd klaar (mede dankzij het
+ hergebruiken van code uit ons vorige project) en ook hints werden geïmplementee
+rd.
+\end_layout
+
+\begin_layout Standard
+Daarna is er vooral zeer veel tijd gestoken in de GUI, die nog sterk uitgebreid
+ moest worden ten opzichte van de basis versie.
+ Die basis versie was namelijk geschreven om makkelijker te kunnen testen.
+ Toen de GUI op een punt kwam dat hij er als een echt bruikbare applicatie
+ begon uit te zien, werd er begonnen met het cross-platform testen.
+ Hierbij zijn verscheidene problemen aan het licht gekomen (zie ook sectie
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:Cross-platform-problemen-en"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+In de finale fase moesten we ons bijgevolg vooral bezig houden met finale
+ aanpassingen: Wim met het mooier maken van de GUI, Bram met het sturen
+ van onze applicatie naar testgebruikers, die feedback moesten verzorgen
+ over de generatie van de puzzels.
+ De feedback bleek hoofdzakelijk positief, dus er moesten slechts kleine
+ aanpassingen gebeuren aan de algoritmen.
+ Ook de vertalingen werden afgewerkt, en de laatste bugs werden opgelost.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-3"
+
+\end_inset
+
+http://doc.trolltech.com/4.3
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-4"
+
+\end_inset
+
+http://doc.trolltech.com/qq/qq18-macfeatures.html
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-9"
+
+\end_inset
+
+http://doc.trolltech.com/4.3/threads.html#threads-and-qobjects
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+http://doc.trolltech.com/4.3/i18n.html
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-10"
+
+\end_inset
+
+http://websvn.kde.org/trunk/KDE/kdegames/kreversi
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-11"
+
+\end_inset
+
+http://doc.trolltech.com/4.3/qabstractscrollarea.html#setViewport
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-12"
+
+\end_inset
+
+http://thesmithfam.org/blog/2007/02/03/qt-improving-qgraphicsview-performance/
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-14"
+
+\end_inset
+
+http://en.wikipedia.org/wiki/Sudoku
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-15"
+
+\end_inset
+
+http://www.eddaardvark.co.uk/sudokusolver.html
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-16"
+
+\end_inset
+
+http://www.di-mgt.com.au/sudoku.html
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-17"
+
+\end_inset
+
+http://www.techfinesse.com/game/sudoku_solver.php#desc
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-18"
+
+\end_inset
+
+http://edwinchan.wordpress.com/2006/01/08/sudoku-solver-in-c-using-backtracking/
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-19"
+
+\end_inset
+
+http://code.google.com/p/reversi-school/
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-20"
+
+\end_inset
+
+http://trolltech.com/developer/task-tracker/index_html?id=156410&method=entry
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-21"
+
+\end_inset
+
+http://doc.trolltech.com/4.4/qpainter.html#drawRoundedRect
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,715 @@
+#LyX 1.5.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass article
+\language dutch
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Project Sudoku: Analyseverslag
+\end_layout
+
+\begin_layout Author
+Wim Leers (0623800) en Bram Bonné (0623825)
+\end_layout
+
+\begin_layout Section
+Beschrijving van het onderwerp
+\end_layout
+
+\begin_layout Subsection
+Doel en interpretatie
+\end_layout
+
+\begin_layout Standard
+Het doel is om een Sudoku-programma in Qt te ontwikkelen dat zowel gebruikt
+ kan worden om het spel Sudoku te spelen (op gegenereerde spelborden) als
+ om Sudoku's zelf op te lossen (deze kunnen dan door de gebruiker ingevoerd
+ worden).
+\end_layout
+
+\begin_layout Standard
+De spelregels die we zullen toepassen zijn deze die op Wikipedia
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+http://en.wikipedia.org/wiki/Sudoku
+\end_layout
+
+\end_inset
+
+ gevonden kunnen worden.
+ Eventueel (als we tijd genoeg hebben) zouden we ook de spelvariant Hypersudoku
+\begin_inset Foot
+status open
+
+\begin_layout Standard
+http://en.wikipedia.org/wiki/Hypersudoku
+\end_layout
+
+\end_inset
+
+ kunnen implementeren, gezien dan enkel het 'check'-algoritme aangepast
+ zou moeten worden.
+\end_layout
+
+\begin_layout Subsection
+Extra's
+\end_layout
+
+\begin_layout Standard
+De extra's waar we momenteel aan denken zijn de volgende:
+\end_layout
+
+\begin_layout Itemize
+Opslaan en inlezen van de huidige sudoku, zodat een spel later verdergezet
+ kan worden.
+\end_layout
+
+\begin_layout Itemize
+Verschillende moeilijkheidsgraden, gebaseerd op het aantal mogelijke manieren
+ om de sudoku op te lossen.
+\end_layout
+
+\begin_layout Itemize
+Hints (mogelijke zetten, zowel voor 1 geselecteerd vakje als voor het hele
+ bord).
+\end_layout
+
+\begin_layout Itemize
+Een volledig vertaalbaar programma (door middel van translation files).
+\end_layout
+
+\begin_layout Itemize
+Doxygen documentatie (en dus ook Doxygen tags in de code).
+\end_layout
+
+\begin_layout Itemize
+Platformonafhankelijkheid.
+\end_layout
+
+\begin_layout Itemize
+Hypersudoku (als de tijd het toelaat).
+\end_layout
+
+\begin_layout Section
+Analyse
+\end_layout
+
+\begin_layout Subsection
+Klassediagram
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename UML-080209.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+ADT's
+\end_layout
+
+\begin_layout Description
+Board Dit is een klasse die een array van enums (met waarden 
+\family typewriter
+EMPTY
+\family default
+ of 0-9) en de operaties hierop voorziet, alsook enkele kleine checkfuncties
+ die betrekking hebben tot het bord zelf.
+ Deze functies zijn 
+\family typewriter
+isValidMove()
+\family default
+, 
+\family typewriter
+isValid()
+\family default
+ en 
+\family typewriter
+isSolvable()
+\family default
+.
+ Ook kan hij een array inlezen uit, of wegschrijven naar een bestand (met
+ behulp van de 
+\family typewriter
+FileIO
+\family default
+ klasse).
+\end_layout
+
+\begin_layout Description
+Sudoku Deze klasse voorziet de algoritmes voor het spel.
+ De oplosser voor het bord (
+\family typewriter
+SolveBoard()
+\family default
+) zetten we hierin, alsook de 
+\family typewriter
+GenerateBoard()
+\family default
+ functie.
+ Beiden krijgen een pointer naar een 
+\family typewriter
+Board
+\family default
+ element mee waarop ze moeten werken.
+\end_layout
+
+\begin_layout Description
+QtGame Dit is de klasse waarin alle interactie met de gebruiker (het Qt-gedeelte
+) alsook het spelverloop geregeld wordt.
+ Deze klasse heeft dus de nodige signals en slots om het spelverloop in
+ goede banen te leiden.
+ In de slots (maw: wanneer de gebruiker een bepaalde actie uitvoert) wordt
+ natuurlijk gebruik gemaakt van de methods van de Sudoku klasse.
+ Deze klasse bevat ook het spelbord.
+\end_layout
+
+\begin_layout Description
+MainWindow Deze klasse is – zoals de naam al aangeeft – de klasse voor het
+ venster dat de andere Qt widgets bevat.
+ Voor het belangrijkste element, het spelbord, gaan we hoogstwaarschijnlijk
+ een 
+\family typewriter
+QGraphicsView
+\family default
+ gebruiken.
+ Op deze manier kunnen we op een zeer flexibele manier het spelbord vormgeven
+ en kunnen we geavanceerde interacties voorzien.
+ Deze bespreking is slechts een 
+\emph on
+inschatting
+\emph default
+ van hoe de klassestructuur van het Qt-gedeelte er zal gaan uitzien: het
+ is onmogelijk om nu al te zeggen hoe het er precies zal gaan uitzien.
+\end_layout
+
+\begin_layout Description
+FileIO: De klasse die gebruikt wordt voor de FileIO zelf, dus niet voor
+ het schrijven naar een bord.
+ Gegevens die uit een bestand komen of in een bestand gaan worden via queues
+ behandeld.
+ We hergebruiken deze klasse uit ons vorig project (Reversi).s
+\end_layout
+
+\begin_layout Description
+Exception: De standaard exception klasse.
+ Deze wordt nooit op zichzelf geïnstantieerd, maar kent de afgeleide klassen
+ 
+\family typewriter
+QtException
+\family default
+, 
+\family typewriter
+InternalException
+\family default
+ en 
+\family typewriter
+FileException
+\family default
+, die respectievelijk fouten bij de interface, het interne gedeelte en het
+ lezen/schrijven naar bestanden opvangen.
+\end_layout
+
+\begin_layout Subsection
+Algoritmes
+\end_layout
+
+\begin_layout Standard
+De moeilijke algoritmes bevinden zich voornamelijk in de 
+\family typewriter
+Sudoku
+\family default
+ en de 
+\family typewriter
+Board
+\family default
+ klassen.
+ Deze bespreken we dan ook hier.
+\end_layout
+
+\begin_layout Standard
+De belangrijkste van deze functies is de 
+\family typewriter
+isValidMove()
+\family default
+ functie, gezien deze gaat kijken of het zetten van een element op een bepaalde
+ plaats nog een geldig bord oplevert.
+ Deze functie zal ervan uit gaan dat het bord dat wordt meegegeven reeds
+ een geldig bord is, om op die manier zo efficiënt mogelijk de huidige zet
+ te kunnen controleren.
+ Hij gaat dan voor de meegegeven zet in de parameters kijken of het vakje
+ al ingevuld is en daarna onderzoeken of hetzelfde getal al horizontaal,
+ verticaal of in het 3x3 blokje voorkomt.
+ De functie wordt gebruikt door zowat alle functies die iets te maken hebben
+ met het controleren, het oplossen, of het genereren van het bord.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=C"
+inline false
+status open
+
+\begin_layout Standard
+
+if (veld leeg)
+\end_layout
+
+\begin_layout Standard
+
+   return (CheckHorizontal() && CheckVertical() && CheckBlock());
+\end_layout
+
+\begin_layout Standard
+
+return false;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Waarbij we gebruik maken van het feit dat de compiler aan 'lazy evaluation'
+ zal doen en als dusdanig alleen 
+\family typewriter
+checkVertical()
+\family default
+ zal oproepen als 
+\family typewriter
+checkHorizontal()
+\family default
+ 
+\family typewriter
+true
+\family default
+ teruggaf.
+ 
+\family typewriter
+checkHorizontal()
+\family default
+ ziet er dan ongeveer zo uit:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++}"
+inline false
+status open
+
+\begin_layout Standard
+
+for (i = 0; !foutGevonden && i < 9; i++)
+\end_layout
+
+\begin_layout Standard
+
+   foutGevonden = (bord[rij][i] == toeTeVoegenElement);
+\end_layout
+
+\begin_layout Standard
+
+return !foutGevonden;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De functie 
+\family typewriter
+isValid()
+\family default
+ doet wat hij zegt.
+ Hij krijgt gewoon een bord mee en gaat hierop kijken of er geen dubbele
+ elementen voorkomen op plaatsen waar het niet mag (door gebruik te maken
+ van de 
+\family typewriter
+isValidMove()
+\family default
+ functie op elke plaats van het bord).
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+solveBoard()
+\family default
+ zal een bord volledig invullen.
+ Hij werkt door het gebruik van backtracking om zo de mogelijkheden af te
+ gaan.
+ Een stukje pseudocode:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++}"
+inline false
+status open
+
+\begin_layout Standard
+
+if (!board.IsFull()) {
+\end_layout
+
+\begin_layout Standard
+
+   for (alle mogelijke zetten) {
+\end_layout
+
+\begin_layout Standard
+
+      if (board.IsValidMove( te proberen element )) {
+\end_layout
+
+\begin_layout Standard
+
+         board.Set( dit element );
+\end_layout
+
+\begin_layout Standard
+
+         if (SolveBoard())
+\end_layout
+
+\begin_layout Standard
+
+            return true;
+\end_layout
+
+\begin_layout Standard
+
+         else
+\end_layout
+
+\begin_layout Standard
+
+            undoZet();
+\end_layout
+
+\begin_layout Standard
+
+      }
+\end_layout
+
+\begin_layout Standard
+
+   }
+\end_layout
+
+\begin_layout Standard
+
+   if ( geen van de zetten gelukt )
+\end_layout
+
+\begin_layout Standard
+
+      return false;
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+else
+\end_layout
+
+\begin_layout Standard
+
+   return true;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De functie 
+\family typewriter
+generateBoard()
+\family default
+ zal gebruik maken van 
+\family typewriter
+solveBoard()
+\family default
+ om een bord te genereren.
+ Eerst wordt (door gebruik te maken van willekeurige nummers en 
+\family typewriter
+solveBoard()
+\family default
+) een uitgespeeld spel gegenereerd.
+ Hierna gaat 
+\family typewriter
+generateBoard()
+\family default
+ elementen wegnemen tot op een moment dat er nog maar een aantal (dat afhangt
+ van de moeilijkheidsgraad) mogelijke zetten zijn.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language={C++}"
+inline false
+status open
+
+\begin_layout Standard
+
+/* Elementen in random volgorde/met random waarde
+\end_layout
+
+\begin_layout Standard
+
+ * proberen te plaatsen, zodat bord random genoeg is */
+\end_layout
+
+\begin_layout Standard
+
+solveBoard(tempboard);
+\end_layout
+
+\begin_layout Standard
+
+// triedElems[][] houdt bij welke elementen geprobeerd zijn
+\end_layout
+
+\begin_layout Standard
+
+while (tempBoard.isValid() && !isFull(triedElems)) {
+\end_layout
+
+\begin_layout Standard
+
+   do {
+\end_layout
+
+\begin_layout Standard
+
+      randomX = rand() % 9 + 1;
+\end_layout
+
+\begin_layout Standard
+
+      randomY = rand() % 9 + 1;
+\end_layout
+
+\begin_layout Standard
+
+   } while (triedElems[randomX][randomY]);
+\end_layout
+
+\begin_layout Standard
+
+   triedElems[randomX][randomY] = true;
+\end_layout
+
+\begin_layout Standard
+
+   tempboard.RemoveElem(randomX, randomY);
+\end_layout
+
+\begin_layout Standard
+
+   if (!tempboard.IsSolvable())
+\end_layout
+
+\begin_layout Standard
+
+      undoLast(); // Werkt met stack
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+/* MAXNIVEAU is de hoogste moeilijkheidsgraad
+\end_layout
+
+\begin_layout Standard
+
+ * We willen het aantal mogelijkheden van de gekozen
+\end_layout
+
+\begin_layout Standard
+
+ * moeilijkheidsgraad hebben, undoLast() zet dan een element
+\end_layout
+
+\begin_layout Standard
+
+ * terug, zodat het gemakkelijker wordt.
+ */
+\end_layout
+
+\begin_layout Standard
+
+for (int i = 0; i < MAXNIVEAU - moeilijkheidsgraad; i++)
+\end_layout
+
+\begin_layout Standard
+
+   UndoLast();
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Subsection
+Bestandsstructuren
+\end_layout
+
+\begin_layout Standard
+Het enige dat moet opgeslagen/ingelezen kunnen worden is de huidige spelsituatie.
+ Deze zullen we wegschrijven in het 
+\emph on
+csv
+\emph default
+ formaat (9 rijen, 9 kolommen), zodat het overal gemakkelijk geopend kan
+ worden.
+ Lege vakjes worden weergegeven door een spatie zodat het bestand er ook
+ 'natuurlijk' uitziet in een tekst-editor (doordat een 
+\emph on
+csv
+\emph default
+ bestand gewoon een aantal rijen zijn met waarden die gescheiden worden
+ door komma's).
+\end_layout
+
+\begin_layout Section
+Taakverdeling en Planning
+\end_layout
+
+\begin_layout Standard
+Tot nu toe hebben we enkel de (voorlopige) klassedefinities (samen) gemaakt.
+ Dit betekent dat de 
+\family typewriter
+Exception
+\family default
+ klassen klaar zijn.
+ Aangezien we de 
+\family typewriter
+FileIO
+\family default
+ klasse uit ons vorige project zullen hergebruiken, is deze ook af.
+ De taakverdeling voor de rest van het project ziet er als volgt uit, maar
+ is onderhevig aan veranderingen:
+\end_layout
+
+\begin_layout Standard
+Wim zal zowel het grafische gedeelte als het spelverloop voor zijn rekening
+ nemen.
+ Dit houdt in dat hij ervoor zal zorgen dat het spel van begin tot eind
+ gespeeld kan worden.
+\end_layout
+
+\begin_layout Standard
+Bram zorgt er dan voor dat het interne gedeelte van het spel werkt, dit
+ wil zeggen: de volledige 
+\family typewriter
+Board
+\family default
+ en 
+\family typewriter
+Sudoku
+\family default
+ klassen.
+ Hij houdt zich dus bezig met de algoritmen om een bord te genereren of
+ op te lossen en met deze die kijken of het bord nog oplosbaar is op een
+ bepaald moment in het spel.
+ Ook zal hij zorgen voor de documentatie.
+\end_layout
+
+\begin_layout Standard
+De planning ziet er (voorlopig) ongeveer zo uit:
+\end_layout
+
+\begin_layout Description
+einde\InsetSpace ~
+paasvakantie Basisstructuur af, dat wil zeggen: zorgen dat de klassen
+ er uitzien zoals ze zullen zijn aan het einde van het project.
+\end_layout
+
+\begin_layout Description
+week\InsetSpace ~
+2\InsetSpace ~
+trimester\InsetSpace ~
+3 Ervoor zorgen dat de algoritmes werken, zodat er een spel
+ gespeeld kan worden (eventueel enkel via test-cases door de ontwikkelaars).
+\end_layout
+
+\begin_layout Description
+week\InsetSpace ~
+5\InsetSpace ~
+trimester\InsetSpace ~
+3 Spel moet speelbaar zijn door iedereen.
+ Mogelijk is nog niet alle functionaliteit beschikbaar, maar de belangrijkste
+ functies zouden af moeten zijn.
+\end_layout
+
+\begin_layout Description
+week\InsetSpace ~
+7\InsetSpace ~
+trimester\InsetSpace ~
+3 Volledige implementatie af, zodat we kunnen beginnen met
+ het testen van speciale gevallen om de laatste bugs eruit te werken en
+ zodat we aan het eindverslag en de presentatie kunnen beginnen.
+\end_layout
+
+\end_body
+\end_document
