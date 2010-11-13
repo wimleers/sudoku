@@ -31,6 +31,7 @@
 class SudokuHUD : public QObject, public QGraphicsItem {
 
     Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
 
 public:
     SudokuHUD(void);
