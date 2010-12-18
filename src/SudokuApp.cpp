@@ -42,6 +42,10 @@ SudokuApp::SudokuApp(int & argc, char ** argv) : QApplication(argc, argv) {
 
     m_mainWindow = new MainWindow();
     m_mainWindow->show();
+
+    // Initialize & install the event logger.
+    m_eventLogger = new QEventLogger("./events", m_mainWindow);
+    this->installEventFilter(m_eventLogger);
 }
 
 

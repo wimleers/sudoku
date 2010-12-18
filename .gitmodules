@@ -1,0 +1,3 @@
+[submodule "src/QEventLogger"]
+	path = src/QEventLogger
+	url = git@github.com:wimleers/QEventLogger.git

@@ -22,6 +22,7 @@
 #include <QSettings>
 #include <QDebug>
 #include "Qt/MainWindow.h"
+#include "QEventLogger/QEventLogger.h"
 
 
 class SudokuApp : public QApplication
@@ -34,6 +35,7 @@ protected:
 
 private:
     MainWindow * m_mainWindow;
+    QEventLogger * m_eventLogger;
 };
 
 #endif // SUDOKUAPP_H
