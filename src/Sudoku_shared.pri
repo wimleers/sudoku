@@ -29,7 +29,7 @@ HEADERS += Board.h \
            Sudoku.h \
            BoardGenerator.h \
            SudokuApp.h \
-           QEventLogger.h \
+           QEventLogger/QEventLogger.h \
            Qt/Dimensions.h \
            Qt/MainWindow.h \
            Qt/NewGameDialog.h \
@@ -46,7 +46,7 @@ SOURCES += Board.cpp \
            Sudoku.cpp \
            BoardGenerator.cpp \
            SudokuApp.cpp \
-           QEventLogger.cpp \
+           QEventLogger/QEventLogger.cpp \
            Qt/MainWindow.cpp \
            Qt/NewGameDialog.cpp \
            Qt/PauseOverlay.cpp \
