@@ -3,7 +3,7 @@
 
 /**
  * Board class definition.
- * 
+ *
  * @file Board.h
  * @author Bram Bonne
  */
@@ -16,6 +16,9 @@
 #include "FileIO.h"
 #include "InternalException.h"
 #include <qdatastream.h>
+#ifdef Q_OS_LINUX
+#include <cstdlib>
+#endif
 #include <string>
 using namespace std;
 
@@ -40,7 +43,7 @@ public:
     Board & operator=(const Board & other);
     const int* operator[](unsigned int i) const;
     int* operator[](unsigned int i);
-    
+
     friend QDataStream& operator<<(QDataStream& out, const Board& board);
     friend QDataStream& operator>>(QDataStream& in, Board& board);
 
