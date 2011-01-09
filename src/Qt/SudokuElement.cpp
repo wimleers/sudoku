@@ -4,9 +4,9 @@
 /**
  * Qt SudokuElement widget implementation.
  *
- * The choices' coordinates are (0, 0) at the left top and (2, 2) at the 
+ * The choices' coordinates are (0, 0) at the left top and (2, 2) at the
  * bottom right.
- * 
+ *
  * @file SudokuElement.cpp
  * @author Wim Leers
  */
@@ -49,10 +49,6 @@ QRectF SudokuElement::boundingRect(void) const {
  */
 void SudokuElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
     Q_UNUSED(widget);
-    
-    // Only draw the part that is exposed to the user. From:
-    // http://thesmithfam.org/blog/2007/02/03/qt-improving-qgraphicsview-performance/.
-    painter->setClipRect(option->exposedRect);
 
     // Use a gradient for the brush.
     QLinearGradient gradient = SudokuElement::getBackgroundGradient();
@@ -75,7 +71,7 @@ void SudokuElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * o
         for (int number = 1; number <= 9; number++) {
             bool chosen = m_choices[number - 1];
             if (chosen || m_focus) { // We draw the number if it's either chosen or if the user is hovering over this item.
-            
+
                 // When chosen: dark blue pen, light blue-ish otherwise.
                 painter->setPen(QPen((chosen) ? QColor(3, 73, 104) : QColor(87, 106, 114), 0));
 
@@ -115,7 +111,7 @@ void SudokuElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * o
 
 /**
  * Set all choices and schedule a repaint.
- * 
+ *
  * @param choices
  *   An array of 9 bools, with false meaning that the choice is not set.
  */
@@ -135,7 +131,7 @@ bool SudokuElement::getGenerated(void) const {
 
 /**
  * Set the SudokuElement's generated state.
- * 
+ *
  * @param generated
  *   Whether this SudokuElement should be rendered as if it were generated.
  */
@@ -151,7 +147,7 @@ void SudokuElement::setGenerated(bool generated) {
 
 /**
  * Enable a choice.
- * 
+ *
  * @param number
  *   A number (1-9).
  */
@@ -164,7 +160,7 @@ void SudokuElement::enableChoice(int number) {
 
 /**
  * Disable a choice.
- * 
+ *
  * @param number
  *   A number (1-9).
  */
@@ -177,7 +173,7 @@ void SudokuElement::disableChoice(int number) {
 
 /**
  * Set the final choice.
- * 
+ *
  * @param number
  *   A number (1-9).
  */
@@ -277,7 +273,7 @@ void SudokuElement::focusInEvent(QFocusEvent * event) {
     Q_UNUSED(event);
 
     m_focus = true;
-    update();   
+    update();
 }
 
 /**
@@ -339,7 +335,7 @@ void SudokuElement::keyPressEvent(QKeyEvent * event) {
             else
                 emit disableChoice(m_x, m_y, number);
     }
-    
+
     // Unset a final choice.
     if (event->key() == Qt::Key_Backspace)
         emit unsetFinalChoice(m_x, m_y);
@@ -354,7 +350,7 @@ void SudokuElement::keyPressEvent(QKeyEvent * event) {
 
 /**
  * Get the number by passing in a mouse position (from the scene).
- * 
+ *
  * @param scenePos
  *   The mouse position on the scene.
  * @return
@@ -378,7 +374,7 @@ int SudokuElement::getChoiceByMousePos(const QPointF & scenePos) const {
 /**
  * Get the bounding rectangle for a number, and determine the number by its
  * position in the SudokuElement ((x, y) coordinates, where x, y = {0, 1, 2}).
- * 
+ *
  * @param x
  *   x coordinate of a number in the SudokuElement
  * @param y
@@ -403,7 +399,7 @@ QRect SudokuElement::getBoundingRectForChoiceByCoords(int x, int y) const {
 
 /**
  * Get the bounding rectangle for a number.
- * 
+ *
  * @param number
  *   A number (1-9).
  * @return
@@ -425,7 +421,7 @@ QRect SudokuElement::getBoundingRectForChoice(int number) const {
 
 /**
  * Get the bounding rectangle for the final choice.
- * 
+ *
  * @return
  *   A bounding rectangle.
  */
