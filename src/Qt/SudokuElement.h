@@ -7,7 +7,7 @@
  * This class is derived from QGraphicsItem, because it will be used as an
  * item in a QGraphicsScene. However, it's derived first from QObject, because
  * we want to be able to emit signals.
- * 
+ *
  * @file SudokuElement.h
  * @author Wim Leers
  */
@@ -63,7 +63,7 @@ public slots:
     void disableChoice(int number);
     void setFinalChoice(int number);
     void unsetFinalChoice(void);
-    
+
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
