@@ -1,0 +1,7 @@
+.moc
+.obj
+.rcc
+Makefile
+*.app
+*.pro*
+*.patch
