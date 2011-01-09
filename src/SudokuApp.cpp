@@ -44,7 +44,7 @@ SudokuApp::SudokuApp(int & argc, char ** argv) : QApplication(argc, argv) {
     m_mainWindow->show();
 
     // Initialize & install the event logger.
-    m_eventLogger = new QEventLogger("./events", m_mainWindow);
+    m_eventLogger = new QEventLogger("./events", m_mainWindow, true);
     this->installEventFilter(m_eventLogger);
 }
 
@@ -66,6 +66,6 @@ bool SudokuApp::event(QEvent * event) {
         // QEvent::ApplicationDeactivate is triggered when
         // QEvent::WindowDeactivate should be triggered.
     #endif
-    
+
     return false;
 }
