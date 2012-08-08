@@ -279,7 +279,7 @@ void SudokuGame::performAllCalculations(bool firstTime) {
  *   true if the game should be paused, false if it should be paused.
  */
 void SudokuGame::pause(bool pause) {
-    if (!m_ready)
+    if ( (!m_ready) || (m_finished) )
         return;
 
     if (pause) {
@@ -296,6 +296,7 @@ void SudokuGame::pause(bool pause) {
  */
 void SudokuGame::reset(void) {
     startWorking();
+    m_duration = 0;
     delete m_board;
     m_board = new Board(*m_originalBoard);
     performAllCalculations(true);
