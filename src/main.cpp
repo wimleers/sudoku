@@ -20,6 +20,10 @@ using namespace std;
 int main(int argc, char * argv[]) {
     QT_REQUIRE_VERSION(argc, argv, "4.3.0")
 
+    #if QT_VERSION >= QT_VERSION_CHECK(5,6,0)
+        QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    #endif
+
     try {
         SudokuApp app(argc, argv);
         return app.exec();
