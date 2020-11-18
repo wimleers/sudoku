@@ -13,6 +13,7 @@ CONFIG(release, debug|release) {
 message("Basic settings...")
 TEMPLATE = app
 CONFIG += qt thread resources warn_on
+QT += printsupport
 OBJECTS_DIR = .obj
 MOC_DIR = .moc
 RCC_DIR = .rcc

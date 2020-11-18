@@ -29,7 +29,7 @@ SudokuElement::SudokuElement(void) {
     for (int i = 0; i < 9; i++)
         m_choices[i] = false;
 
-    setAcceptsHoverEvents(true);
+    setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsFocusable);
 }
 
