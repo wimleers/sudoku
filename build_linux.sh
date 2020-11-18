@@ -14,8 +14,8 @@ echo "[2/3] Building the project in release mode ..."
 make clean > /dev/null
 make > /dev/null
 
-echo "[3/3] Packaging into a ZIP ..."
+echo "[3/3] Packaging into a tar.gz ..."
 cd ..
-tar -cf Sudoku.tar.gz Sudoku
+tar -czf Sudoku.tar.gz -C src Sudoku
 
 echo "All done! ./Sudoku.tar.gz is ready for release!"
